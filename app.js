@@ -314,6 +314,21 @@
     return enrichmentRoot().resources[key] || null;
   }
 
+  function enrichedPlaceByName(name) {
+    var target = simpleText(name);
+    if (!target) return null;
+    var places = enrichmentRoot().places || {};
+    var keys = Object.keys(places);
+    for (var i = 0; i < keys.length; i++) {
+      var place = places[keys[i]];
+      var candidate = simpleText(place.name);
+      if (candidate === target || candidate.indexOf(target) >= 0 || target.indexOf(candidate) >= 0) {
+        return { placeKey: keys[i], place: place };
+      }
+    }
+    return null;
+  }
+
   function simpleText(value) {
     return norm(value).toLocaleLowerCase("fr").normalize("NFD").replace(/[\u0300-\u036f]/g, "");
   }
@@ -356,6 +371,8 @@
       var contactName = simpleText(item.name);
       return contactName.indexOf(name) >= 0 || name.indexOf(contactName) >= 0;
     });
+    var phoneHref = contact && contact.tel ? contact.tel : (place.phone || "");
+    var siteHref = place.site || "";
 
     return h("div", {
       className: "place-sheet-backdrop",
@@ -386,7 +403,8 @@
               href: "https://maps.apple.com/?ll=" + place.lat + "," + place.lng + "&q=" + encodeURIComponent(place.name),
               target: "_blank", rel: "noopener", className: "sheet-action primary"
             }, h(SvgIcon, { name: "map", size: 18 }), " Ouvrir dans Plans"),
-            contact && contact.tel ? h("a", { href: contact.tel, className: "sheet-action" }, h(SvgIcon, { name: "phone", size: 18 }), " Appeler") : null
+            phoneHref ? h("a", { href: phoneHref, className: "sheet-action" }, h(SvgIcon, { name: "phone", size: 18 }), " Appeler") : null,
+            siteHref ? h("a", { href: siteHref, target: "_blank", rel: "noopener", className: "sheet-action" }, "↗ " + (place.siteLabel || "Site")) : null
           ),
           contact ? h("div", { className: "sheet-contact" },
             h("span", null, "Contact / référence"),
@@ -769,6 +787,8 @@
       var b = day.hotel.toLocaleLowerCase("fr");
       return b && (a.indexOf(b) >= 0 || b.indexOf(a) >= 0);
     });
+    var hotelInfo = enrichedPlaceByName(day.hotel);
+    var hotelPhone = contact && contact.tel ? contact.tel : (hotelInfo && hotelInfo.place.phone ? hotelInfo.place.phone : "");
 
     function finishSwipe() {
       if (touchStart === null || touchEnd === null) return;
@@ -796,11 +816,15 @@
       ),
       h("div", { className: "day-facts" },
         day.cash ? h("div", { className: "fact" }, h("span", null, h(SvgIcon, { name: "wallet", size: 18 }), " Espèces"), h("strong", null, day.cash)) : null,
-        day.hotel ? h("div", { className: "fact" }, h("span", null, h(SvgIcon, { name: "map", size: 18 }), " Nuit"), h("strong", null, day.hotel)) : null
+        day.hotel ? h("div", { className: "fact fact-with-info" },
+          h("span", null, h(SvgIcon, { name: "map", size: 18 }), " Nuit"),
+          h("strong", null, day.hotel),
+          hotelInfo && props.onPlaceInfo ? h(InfoDot, { onClick: function () { props.onPlaceInfo(hotelInfo); } }) : null
+        ) : null
       ),
       day.hotel ? h("div", { className: "quick-actions" },
         h("a", { className: "action-btn", href: "https://maps.apple.com/?q=" + encodeURIComponent(day.hotel + " Grèce"), target: "_blank", rel: "noopener" }, h(SvgIcon, { name: "map", size: 18 }), " Itinéraire hôtel"),
-        contact && contact.tel ? h("a", { className: "action-btn", href: contact.tel }, h(SvgIcon, { name: "phone", size: 18 }), " Appeler") : null
+        hotelPhone ? h("a", { className: "action-btn", href: hotelPhone }, h(SvgIcon, { name: "phone", size: 18 }), " Appeler") : null
       ) : null,
       h(Timeline, { day: day, isToday: props.isToday, onPlaceInfo: props.onPlaceInfo })
     );
