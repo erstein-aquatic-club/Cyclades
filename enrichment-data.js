@@ -59,7 +59,10 @@ window.CYCLADES_ENRICHMENT = {
       blurb: "Ruelles blanches, dômes bleus et coucher de soleil sur la caldeira.",
       image: "https://commons.wikimedia.org/wiki/Special:FilePath/Oia_Santorini_Blue_Domes.jpg?width=900",
       imageSource: "https://commons.wikimedia.org/wiki/File:Oia_Santorini_Blue_Domes.jpg",
-      imageCredit: "Wikimedia Commons · Danbu14 · CC BY-SA"
+      imageCredit: "Wikimedia Commons · Danbu14 · CC BY-SA",
+      actions: [
+        { label:"Appeler Strogili", href:"tel:+302286072367" }
+      ]
     },
     ammoudi: {
       name: "Baie d’Ammoudi", lat: 36.4614, lng: 25.3695, type: "food",
@@ -85,7 +88,10 @@ window.CYCLADES_ENRICHMENT = {
       blurb: "Îlot volcanique et montée au cratère sur terrain de lave.",
       image: "https://commons.wikimedia.org/wiki/Special:FilePath/Caldera_of_Santorini_-_Nea_Kameni_-_Fira_-_Greece.jpg?width=900",
       imageSource: "https://commons.wikimedia.org/wiki/File:Caldera_of_Santorini_-_Nea_Kameni_-_Fira_-_Greece.jpg",
-      imageCredit: "Wikimedia Commons · Norbert Nagel · CC"
+      imageCredit: "Wikimedia Commons · Norbert Nagel · CC",
+      actions: [
+        { label:"Caldera's Boats", href:"tel:+306948684886" }
+      ]
     },
     paleaKameni: {
       name: "Palea Kameni", lat: 36.3933, lng: 25.3811, type: "nature",
@@ -173,7 +179,10 @@ window.CYCLADES_ENRICHMENT = {
       blurb: "Port vénitien, ruelles et restaurants autour du vieux bassin.",
       image: "https://commons.wikimedia.org/wiki/Special:FilePath/GR-paros-naoussa-gasse-2.jpg?width=900",
       imageSource: "https://commons.wikimedia.org/wiki/File:GR-paros-naoussa-gasse-2.jpg",
-      imageCredit: "Wikimedia Commons · CC"
+      imageCredit: "Wikimedia Commons · CC",
+      actions: [
+        { label:"Appeler Sigi Ikthios", href:"tel:+302284052639" }
+      ]
     },
     kolymbithres: {
       name: "Kolymbithres", lat: 37.1272, lng: 25.2131, type: "beach",
@@ -213,7 +222,11 @@ window.CYCLADES_ENRICHMENT = {
       blurb: "Façades au bord de l’eau, bars et coucher du soleil face aux moulins.",
       image: "https://commons.wikimedia.org/wiki/Special:FilePath/Little_Venice_-_Mykonos.jpg?width=900",
       imageSource: "https://commons.wikimedia.org/wiki/File:Little_Venice_-_Mykonos.jpg",
-      imageCredit: "Wikimedia Commons · Zigomitros Athanasios · CC"
+      imageCredit: "Wikimedia Commons · Zigomitros Athanasios · CC",
+      actions: [
+        { label:"Réserver Kastro's", href:"https://www.kastrosmykonos.com/contact/" },
+        { label:"Appeler M-Eating", href:"tel:+302289078550" }
+      ]
     },
     katoMili: {
       name: "Moulins de Kato Mili", lat: 37.4443, lng: 25.3252, type: "view",
