@@ -404,7 +404,17 @@
               target: "_blank", rel: "noopener", className: "sheet-action primary"
             }, h(SvgIcon, { name: "map", size: 18 }), " Ouvrir dans Plans"),
             phoneHref ? h("a", { href: phoneHref, className: "sheet-action" }, h(SvgIcon, { name: "phone", size: 18 }), " Appeler") : null,
-            siteHref ? h("a", { href: siteHref, target: "_blank", rel: "noopener", className: "sheet-action" }, "↗ " + (place.siteLabel || "Site")) : null
+            siteHref ? h("a", { href: siteHref, target: "_blank", rel: "noopener", className: "sheet-action" }, "↗ " + (place.siteLabel || "Site")) : null,
+            (place.actions || []).map(function (action) {
+              var isExternal = /^https?:/i.test(action.href || "");
+              return h("a", {
+                key: action.label,
+                href: action.href,
+                target: isExternal ? "_blank" : null,
+                rel: isExternal ? "noopener" : null,
+                className: "sheet-action contextual"
+              }, action.label);
+            })
           ),
           contact ? h("div", { className: "sheet-contact" },
             h("span", null, "Contact / référence"),
