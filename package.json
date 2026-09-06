@@ -1,0 +1,14 @@
+{
+  "name": "cyclades-travel-app",
+  "private": true,
+  "version": "4.0.0",
+  "description": "Compagnon de voyage Cyclades",
+  "scripts": {
+    "dev": "vite --host 0.0.0.0",
+    "build": "vite build",
+    "preview": "vite preview --host 0.0.0.0"
+  },
+  "devDependencies": {
+    "vite": "^7.1.0"
+  }
+}

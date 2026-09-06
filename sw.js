@@ -1,57 +1,76 @@
-// Cyclades — service worker
-// Strategie : reseau d'abord pour le contenu, cache en secours.
-// Versionner le cache force iOS/Safari a abandonner les anciennes ressources.
-const CACHE = 'cyclades-v3-20260906';
-const ASSETS = ['./', './index.html', './manifest.webmanifest',
-                './icon-180.png', './icon-192.png', './icon-512.png'];
+// Cyclades React V4 — offline-first static application shell
+const CACHE = 'cyclades-react-v4-20260906';
+const LOCAL_ASSETS = [
+  './',
+  './index.html',
+  './styles.css',
+  './app.js',
+  './trip-data.html',
+  './manifest.webmanifest',
+  './icon-180.png',
+  './icon-192.png',
+  './icon-512.png'
+];
+const VENDOR_ASSETS = [
+  'https://unpkg.com/react@18.3.1/umd/react.production.min.js',
+  'https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js'
+];
+const ASSETS = LOCAL_ASSETS.concat(VENDOR_ASSETS);
 
-self.addEventListener('install', e => {
-  e.waitUntil(
+self.addEventListener('install', event => {
+  event.waitUntil(
     caches.open(CACHE)
-      .then(c => Promise.all(
-        ASSETS.map(asset =>
-          fetch(asset, { cache: 'reload' }).then(res => {
-            if (!res.ok) throw new Error('Precaching failed: ' + asset);
-            return c.put(asset, res);
-          })
-        )
-      ))
+      .then(cache => Promise.all(ASSETS.map(asset =>
+        fetch(asset, { cache: 'reload' }).then(response => {
+          if (!response.ok) throw new Error('Precaching failed: ' + asset);
+          return cache.put(asset, response);
+        })
+      )))
       .then(() => self.skipWaiting())
   );
 });
 
-self.addEventListener('activate', e => {
-  e.waitUntil(
+self.addEventListener('activate', event => {
+  event.waitUntil(
     caches.keys()
-      .then(ks => Promise.all(ks.filter(k => k !== CACHE).map(k => caches.delete(k))))
+      .then(keys => Promise.all(keys.filter(key => key !== CACHE).map(key => caches.delete(key))))
       .then(() => self.clients.claim())
   );
 });
 
-self.addEventListener('fetch', e => {
-  if (e.request.method !== 'GET') return;
-  const url = new URL(e.request.url);
-  const estContenu = e.request.mode === 'navigate' || url.pathname.endsWith('.html');
+self.addEventListener('fetch', event => {
+  if (event.request.method !== 'GET') return;
 
-  if (estContenu) {
-    // Toujours tenter le reseau sans reutiliser le cache HTTP de Safari.
-    e.respondWith(
-      fetch(new Request(e.request, { cache: 'no-store' }))
-        .then(res => {
-          const copie = res.clone();
-          caches.open(CACHE).then(c => c.put('./index.html', copie));
-          return res;
+  const url = new URL(event.request.url);
+  const isNavigation = event.request.mode === 'navigate';
+  const isTripData = url.origin === self.location.origin && url.pathname.endsWith('/trip-data.html');
+
+  if (isNavigation || isTripData) {
+    event.respondWith(
+      fetch(new Request(event.request, { cache: 'no-store' }))
+        .then(response => {
+          if (response.ok) {
+            const copy = response.clone();
+            caches.open(CACHE).then(cache => cache.put(event.request, copy));
+          }
+          return response;
         })
-        .catch(() => caches.match('./index.html').then(r => r || caches.match('./')))
+        .catch(() =>
+          caches.match(event.request)
+            .then(hit => hit || (isNavigation ? caches.match('./index.html') : caches.match('./trip-data.html')))
+        )
     );
-  } else {
-    // Ressources stables : cache d'abord.
-    e.respondWith(
-      caches.match(e.request).then(hit => hit || fetch(e.request).then(res => {
-        const copie = res.clone();
-        caches.open(CACHE).then(c => c.put(e.request, copie));
-        return res;
-      }))
-    );
+    return;
   }
+
+  event.respondWith(
+    caches.match(event.request)
+      .then(hit => hit || fetch(event.request).then(response => {
+        if (response.ok || response.type === 'opaque') {
+          const copy = response.clone();
+          caches.open(CACHE).then(cache => cache.put(event.request, copy));
+        }
+        return response;
+      }))
+  );
 });

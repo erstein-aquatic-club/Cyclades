@@ -1,17 +1,32 @@
 {
-  "name": "Circuit Cyclades — 9 au 18 septembre 2026",
+  "name": "Cyclades — compagnon de voyage",
   "short_name": "Cyclades",
-  "description": "Carnet de voyage : Santorin, Naxos, Paros, Mykonos",
+  "description": "Compagnon de voyage pour Santorin, Naxos, Paros et Mykonos",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait",
-  "background_color": "#0f1b2d",
-  "theme_color": "#0f1b2d",
+  "background_color": "#fbfaf6",
+  "theme_color": "#075985",
   "lang": "fr",
   "icons": [
-    { "src": "./icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
-    { "src": "./icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
-    { "src": "./icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+    {
+      "src": "./icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
   ]
 }
