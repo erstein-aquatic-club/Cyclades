@@ -52,6 +52,15 @@ window.CYCLADES_ENRICHMENT = {
       ],
       j3: [
         {
+          id:"j3-akrotiri-price",
+          level:"attention",
+          title:"Akrotiri : le tarif brut de 12 € est ancien",
+          text:"Le Ministère grec affiche actuellement 20 € l’entrée adulte pour le site archéologique d’Akrotiri. Pour deux personnes, compte 16 € de plus que dans le carnet.",
+          action:"Prévois 40 € pour les deux entrées ou prends les billets officiels en ligne. Le téléphérique (10 € / trajet) et Nea Kameni (5 € / pers.) restent cohérents.",
+          sourceLabel:"Ministère grec de la Culture",
+          sourceUrl:"https://odysseus.culture.gr/h/3/eh355.jsp?obj_id=2410"
+        },
+        {
           id:"j3-akrotiri-return",
           level:"critical",
           title:"Akrotiri → Fira : le retour publié est à 12h20, pas 12h00",
