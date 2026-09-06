@@ -28,6 +28,13 @@ window.CYCLADES_ENRICHMENT = {
       name: "Aéroport de Santorin (JTR)", lat: 36.3992, lng: 25.4793, type: "transport",
       blurb: "Arrivée sur Santorin. Bus et taxis vers Fira."
     },
+    hotelSantorini: {
+      name: "Hotel Santorini", lat: 36.4167, lng: 25.4333, type: "hotel",
+      blurb: "Hôtel au cœur de Fira, base des trois premières nuits.",
+      phone: "tel:+302286024305",
+      site: "https://hotel-santorini.gr/",
+      siteLabel: "Site officiel"
+    },
     fira: {
       name: "Fira", lat: 36.4167, lng: 25.4333, type: "town",
       blurb: "Base des trois premières nuits, station de bus principale et accès à la caldeira.",
@@ -94,7 +101,10 @@ window.CYCLADES_ENRICHMENT = {
     },
     mareNaxia: {
       name: "Mare Naxia", lat: 37.1009, lng: 25.3773, type: "hotel",
-      blurb: "Base à Naxos, près d’Agios Georgios et de Chora."
+      blurb: "Base à Naxos, près d’Agios Georgios et de Chora.",
+      phone: "tel:+302285023350",
+      site: "https://www.marenaxia.com/en/",
+      siteLabel: "Site officiel"
     },
     naxosKastro: {
       name: "Kastro de Naxos", lat: 37.1065, lng: 25.3765, type: "culture",
@@ -145,7 +155,10 @@ window.CYCLADES_ENRICHMENT = {
     },
     casaDiRoma: {
       name: "Casa Di Roma", lat: 37.0828, lng: 25.1498, type: "hotel",
-      blurb: "Base à Parikia, à quelques minutes à pied du port."
+      blurb: "Base à Parikia, à quelques minutes à pied du port.",
+      phone: "tel:+302284025294",
+      site: "https://www.casadiromaparos.gr/",
+      siteLabel: "Site / réservation"
     },
     ekatontapyliani: {
       name: "Panagia Ekatontapyliani", lat: 37.0848, lng: 25.1505, type: "culture",
@@ -179,7 +192,10 @@ window.CYCLADES_ENRICHMENT = {
     },
     alkistis: {
       name: "Alkistis Beach", lat: 37.4703, lng: 25.3183, type: "hotel",
-      blurb: "Hôtel à Agios Stefanos, au nord de Chora."
+      blurb: "Hôtel à Agios Stefanos, au nord de Chora, face à la mer Égée.",
+      phone: "tel:+302289022333",
+      site: "https://www.alkistismykonos.gr/en/",
+      siteLabel: "Site officiel"
     },
     mykonosOldPort: {
       name: "Old Port / Chora", lat: 37.4503, lng: 25.3283, type: "transport",
