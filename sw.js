@@ -1,10 +1,11 @@
 // Cyclades React V4 — offline-first static application shell
-const CACHE = 'cyclades-react-v4-20260906';
+const CACHE = 'cyclades-live-v5-20260906';
 const LOCAL_ASSETS = [
   './',
   './index.html',
   './styles.css',
   './app.js',
+  './enrichment-data.js',
   './trip-data.html',
   './manifest.webmanifest',
   './icon-180.png',
@@ -13,7 +14,9 @@ const LOCAL_ASSETS = [
 ];
 const VENDOR_ASSETS = [
   'https://unpkg.com/react@18.3.1/umd/react.production.min.js',
-  'https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js'
+  'https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js',
+  'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css',
+  'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js'
 ];
 const ASSETS = LOCAL_ASSETS.concat(VENDOR_ASSETS);
 
@@ -43,6 +46,9 @@ self.addEventListener('fetch', event => {
 
   const url = new URL(event.request.url);
   const isNavigation = event.request.mode === 'navigate';
+
+  // Let map tiles and remote preview images use the browser/provider cache rules.
+  if (url.hostname === 'tile.openstreetmap.org' || url.hostname === 'commons.wikimedia.org' || url.hostname === 'upload.wikimedia.org') return;
   const isTripData = url.origin === self.location.origin && url.pathname.endsWith('/trip-data.html');
 
   if (isNavigation || isTripData) {
