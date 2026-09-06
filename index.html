@@ -676,7 +676,7 @@ if ('serviceWorker' in navigator && location.protocol === 'https:') {
     var mode='home';
     existing.forEach(function(node){
       if(node.id==='valise') mode='prepare';
-      if(node.matches && node.matches('details#j1')) mode='itinerary';
+      if((node.tagName==='H2' && (node.textContent||'').trim()==='Les 10 journées') || (node.matches && node.matches('details#j1'))) mode='itinerary';
       if(node.id==='trsp') mode='info';
       views[mode].appendChild(node);
     });
