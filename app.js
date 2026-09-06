@@ -1143,6 +1143,29 @@
         h("div", null, h("span", null, "Urgence en Grèce"), h("strong", null, "112")),
         h("span", { className: "emergency-call" }, h(SvgIcon, { name: "phone", size: 20 }), " Appeler")
       ),
+      h("section", { className: "section-block quick-info-block" },
+        h("div", { className: "section-title" }, h("div", null, h("span", { className: "kicker" }, "Un tap"), h("h2", null, "Contacts rapides"))),
+        h("div", { className: "contact-strip" },
+          props.data.contacts.filter(function (item) { return !!item.tel; }).map(function (item) {
+            return h("a", { key: item.name, href: item.tel, className: "contact-chip" },
+              h("span", { className: "contact-icon" }, h(SvgIcon, { name: "phone", size: 16 })),
+              h("span", null, h("strong", null, item.name), h("small", null, "Appeler"))
+            );
+          })
+        )
+      ),
+      h("section", { className: "section-block quick-info-block" },
+        h("div", { className: "section-title" }, h("div", null, h("span", { className: "kicker" }, "Réserver / vérifier"), h("h2", null, "Liens utiles"))),
+        h("div", { className: "service-grid" },
+          Object.keys(enrichmentRoot().resources || {}).map(function (key) {
+            var resource = resourceForKey(key);
+            return resource ? h("a", { key: key, href: resource.url, target: "_blank", rel: "noopener", className: "service-card" },
+              h("span", null, resource.label),
+              h("strong", null, "↗")
+            ) : null;
+          })
+        )
+      ),
       h("section", { className: "section-block" },
         h("div", { className: "section-title" }, h("div", null, h("span", { className: "kicker" }, "Références"), h("h2", null, "Informations utiles"))),
         h("div", { className: "info-accordions" },
