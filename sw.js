@@ -1,7 +1,7 @@
 // Cyclades — service worker
 // Strategie : reseau d'abord pour le contenu, cache en secours.
 // Versionner le cache force iOS/Safari a abandonner les anciennes ressources.
-const CACHE = 'cyclades-v2-20260906';
+const CACHE = 'cyclades-v3-20260906';
 const ASSETS = ['./', './index.html', './manifest.webmanifest',
                 './icon-180.png', './icon-192.png', './icon-512.png'];
 
