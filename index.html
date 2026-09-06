@@ -920,29 +920,35 @@ ready(function(){
   var taskFilters=document.createElement('div');taskFilters.className='app-taskbar';
   taskFilters.innerHTML='<button type="button" class="app-chip active" data-taskfilter="todo">À faire</button><button type="button" class="app-chip" data-taskfilter="all">Tout</button><button type="button" class="app-chip" data-taskfilter="done">Terminé</button>';
   prepDashboard.insertAdjacentElement('afterend',taskFilters);
+  function applyTaskFilter(f){
+    taskBoxes.forEach(function(box){var d=safeStoreGet(box.dataset.taskKey)==='1';box.classList.toggle('app-hide',(f==='todo'&&d)||(f==='done'&&!d))});
+  }
   taskFilters.addEventListener('click',function(e){
     var b=e.target.closest('[data-taskfilter]');if(!b)return;
     [].slice.call(taskFilters.querySelectorAll('.app-chip')).forEach(function(x){x.classList.toggle('active',x===b)});
-    var f=b.dataset.taskfilter;
-    taskBoxes.forEach(function(box){var d=safeStoreGet(box.dataset.taskKey)==='1';box.classList.toggle('app-hide',(f==='todo'&&d)||(f==='done'&&!d))});
+    applyTaskFilter(b.dataset.taskfilter);
   });
+  applyTaskFilter('todo');
 
   var valise=views.prepare.querySelector('#valise');
   if(valise){
     var filters=document.createElement('div');filters.className='app-filterbar';
     filters.innerHTML='<button type="button" class="app-chip active" data-packfilter="todo">À prendre</button><button type="button" class="app-chip" data-packfilter="all">Tout</button>';
     valise.insertAdjacentElement('afterend',filters);
-    filters.addEventListener('click',function(e){
-      var b=e.target.closest('[data-packfilter]');if(!b)return;
-      [].slice.call(filters.querySelectorAll('.app-chip')).forEach(function(x){x.classList.toggle('active',x===b)});
-      var f=b.dataset.packfilter;
+    function applyPackFilter(f){
       oldChecks.forEach(function(input){var label=input.closest('label.ck');label.classList.toggle('app-hide',f==='todo'&&input.checked)});
       [].slice.call(views.prepare.querySelectorAll('.box')).forEach(function(box){
         if(!box.querySelector('label.ck'))return;
         var visible=[].slice.call(box.querySelectorAll('label.ck')).some(function(l){return !l.classList.contains('app-hide')});
         box.classList.toggle('app-hide',f==='todo'&&!visible)
       });
+    }
+    filters.addEventListener('click',function(e){
+      var b=e.target.closest('[data-packfilter]');if(!b)return;
+      [].slice.call(filters.querySelectorAll('.app-chip')).forEach(function(x){x.classList.toggle('active',x===b)});
+      applyPackFilter(b.dataset.packfilter);
     });
+    applyPackFilter('todo');
   }
 
   function prepStats(){
@@ -1017,7 +1023,7 @@ ready(function(){
     }else if(idx>=0){
       var d=days[idx],items=timeline(d),mins=now.getHours()*60+now.getMinutes();
       var future=items.filter(function(x){return x.time&&x.time.minutes>=mins});
-      var next=future[0]||items[items.length-1],after=future.slice(1,4);
+      var next=future[0]||null,after=future.slice(1,4);
       var hero2=document.createElement('div');hero2.className='app-hero';
       hero2.innerHTML='<div class="eyebrow">Aujourd’hui · J'+(idx+1)+'</div><h1>'+esc(dayTitle(d))+'</h1><p>'+esc(dayMeta(d))+'</p>';
       views.today.appendChild(hero2);
