@@ -12,6 +12,7 @@
   <link rel="apple-touch-icon" href="./icon-180.png">
   <link rel="icon" href="./icon-192.png">
   <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
   <link rel="stylesheet" href="./styles.css">
   <title>Cyclades · compagnon de voyage</title>
 </head>
@@ -26,6 +27,8 @@
 
   <script defer crossorigin src="https://unpkg.com/react@18.3.1/umd/react.production.min.js"></script>
   <script defer crossorigin src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js"></script>
+  <script defer crossorigin src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script defer src="./enrichment-data.js"></script>
   <script defer src="./app.js"></script>
   <script>
     if ('serviceWorker' in navigator && location.protocol === 'https:') {

@@ -297,6 +297,363 @@
     });
   }
 
+
+  function enrichmentRoot() {
+    return window.CYCLADES_ENRICHMENT || { places: {}, days: {}, resources: {} };
+  }
+
+  function enrichmentDay(dayId) {
+    return enrichmentRoot().days[dayId] || { points: [], legs: [], featured: [] };
+  }
+
+  function enrichedPlace(placeKey) {
+    return enrichmentRoot().places[placeKey] || null;
+  }
+
+  function resourceForKey(key) {
+    return enrichmentRoot().resources[key] || null;
+  }
+
+  function enrichedPlaceByName(name) {
+    var target = simpleText(name);
+    if (!target) return null;
+    var places = enrichmentRoot().places || {};
+    var keys = Object.keys(places);
+    for (var i = 0; i < keys.length; i++) {
+      var place = places[keys[i]];
+      var candidate = simpleText(place.name);
+      if (candidate === target || candidate.indexOf(target) >= 0 || target.indexOf(candidate) >= 0) {
+        return { placeKey: keys[i], place: place };
+      }
+    }
+    return null;
+  }
+
+  function simpleText(value) {
+    return norm(value).toLocaleLowerCase("fr").normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+  }
+
+  function placeForText(dayId, text) {
+    var target = simpleText(text);
+    if (!target) return null;
+    var dayMeta = enrichmentDay(dayId);
+    for (var i = 0; i < dayMeta.points.length; i++) {
+      var point = dayMeta.points[i];
+      var place = enrichedPlace(point.place);
+      if (!place) continue;
+      var words = simpleText(place.name).split(/[^a-z0-9]+/).filter(function (word) { return word.length >= 4; });
+      var score = words.filter(function (word) { return target.indexOf(word) >= 0; }).length;
+      if (score >= Math.min(2, words.length) || (words.length === 1 && score === 1)) {
+        return { placeKey: point.place, pointId: point.id, place: place };
+      }
+    }
+    return null;
+  }
+
+  function InfoDot(props) {
+    return h("button", {
+      type: "button",
+      className: "info-dot",
+      onClick: function (event) {
+        event.preventDefault();
+        event.stopPropagation();
+        props.onClick();
+      },
+      "aria-label": "Plus d’informations"
+    }, "i");
+  }
+
+  function PlaceSheet(props) {
+    if (!props.info || !props.info.place) return null;
+    var place = props.info.place;
+    var name = simpleText(place.name);
+    var contact = (props.contacts || []).find(function (item) {
+      var contactName = simpleText(item.name);
+      return contactName.indexOf(name) >= 0 || name.indexOf(contactName) >= 0;
+    });
+    var phoneHref = contact && contact.tel ? contact.tel : (place.phone || "");
+    var siteHref = place.site || "";
+
+    return h("div", {
+      className: "place-sheet-backdrop",
+      role: "dialog",
+      "aria-modal": "true",
+      "aria-label": place.name,
+      onClick: function (event) { if (event.target === event.currentTarget) props.onClose(); }
+    },
+      h("article", { className: "place-sheet" },
+        h("div", { className: "sheet-handle" }),
+        place.image ? h("div", { className: "place-sheet-image" },
+          h("img", { src: place.image, alt: place.name, loading: "lazy" }),
+          place.imageCredit ? h("a", { href: place.imageSource, target: "_blank", rel: "noopener", className: "image-credit" }, place.imageCredit) : null
+        ) : h("div", { className: "place-sheet-image placeholder" },
+          h("div", { className: "place-monogram" }, place.name.charAt(0))
+        ),
+        h("div", { className: "place-sheet-body" },
+          h("div", { className: "sheet-title-row" },
+            h("div", null,
+              props.info.pointId ? h("span", { className: "point-badge" }, "Point " + props.info.pointId) : null,
+              h("h2", null, place.name)
+            ),
+            h("button", { type: "button", className: "sheet-close", onClick: props.onClose, "aria-label": "Fermer" }, "×")
+          ),
+          h("p", { className: "place-blurb" }, place.blurb || ""),
+          h("div", { className: "sheet-actions" },
+            h("a", {
+              href: "https://maps.apple.com/?ll=" + place.lat + "," + place.lng + "&q=" + encodeURIComponent(place.name),
+              target: "_blank", rel: "noopener", className: "sheet-action primary"
+            }, h(SvgIcon, { name: "map", size: 18 }), " Ouvrir dans Plans"),
+            phoneHref ? h("a", { href: phoneHref, className: "sheet-action" }, h(SvgIcon, { name: "phone", size: 18 }), " Appeler") : null,
+            siteHref ? h("a", { href: siteHref, target: "_blank", rel: "noopener", className: "sheet-action" }, "↗ " + (place.siteLabel || "Site")) : null,
+            (place.actions || []).map(function (action) {
+              var isExternal = /^https?:/i.test(action.href || "");
+              return h("a", {
+                key: action.label,
+                href: action.href,
+                target: isExternal ? "_blank" : null,
+                rel: isExternal ? "noopener" : null,
+                className: "sheet-action contextual"
+              }, action.label);
+            })
+          ),
+          contact ? h("div", { className: "sheet-contact" },
+            h("span", null, "Contact / référence"),
+            h("strong", null, contact.name),
+            h(Rich, { html: contact.html })
+          ) : null,
+          place.imageSource ? h("a", { href: place.imageSource, target: "_blank", rel: "noopener", className: "source-link" }, "Voir la source de l’aperçu") : null
+        )
+      )
+    );
+  }
+
+  function transportRow(trip, pattern) {
+    if (!trip) return null;
+    return trip.rows.find(function (row) { return pattern.test(row.key); }) || null;
+  }
+
+  function DayMap(props) {
+    var dayMeta = enrichmentDay(props.day.id);
+    var mapNode = useRef(null);
+    var mapRef = useRef(null);
+    var lineRefs = useRef([]);
+    var userMarker = useRef(null);
+    var legState = useState(null);
+    var selectedLeg = legState[0];
+    var setSelectedLeg = legState[1];
+    var locateState = useState("");
+    var locateStatus = locateState[0];
+    var setLocateStatus = locateState[1];
+
+    var points = dayMeta.points.map(function (point) {
+      var place = enrichedPlace(point.place);
+      return place ? { id: point.id, placeKey: point.place, place: place } : null;
+    }).filter(Boolean);
+
+    function pointById(id) {
+      return points.find(function (point) { return point.id === id; }) || null;
+    }
+
+    function pathForLeg(leg) {
+      var ids = [leg.from].concat(leg.via || []).concat([leg.to]);
+      return ids.map(function (id) {
+        var point = pointById(id);
+        return point ? [point.place.lat, point.place.lng] : null;
+      }).filter(Boolean);
+    }
+
+    useEffect(function () {
+      if (!mapNode.current || !window.L || !points.length) return;
+      if (mapRef.current) {
+        mapRef.current.remove();
+        mapRef.current = null;
+      }
+      lineRefs.current = [];
+      setSelectedLeg(null);
+
+      var map = window.L.map(mapNode.current, {
+        zoomControl: false,
+        attributionControl: true,
+        scrollWheelZoom: false
+      });
+      mapRef.current = map;
+      window.L.control.zoom({ position: "bottomright" }).addTo(map);
+      window.L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        maxZoom: 19,
+        attribution: "© OpenStreetMap contributors"
+      }).addTo(map);
+
+      var allLatLngs = [];
+      points.forEach(function (point) {
+        var latLng = [point.place.lat, point.place.lng];
+        allLatLngs.push(latLng);
+        var marker = window.L.marker(latLng, {
+          icon: window.L.divIcon({
+            className: "route-marker-wrap",
+            html: '<span class="route-marker">' + point.id + "</span>",
+            iconSize: [32, 32],
+            iconAnchor: [16, 16]
+          })
+        }).addTo(map);
+        marker.bindTooltip(point.place.name, { direction: "top", offset: [0, -11] });
+        marker.on("click", function () {
+          props.onPlaceInfo({ placeKey: point.placeKey, pointId: point.id, place: point.place });
+        });
+      });
+
+      dayMeta.legs.forEach(function (leg) {
+        var path = pathForLeg(leg);
+        if (path.length < 2) {
+          lineRefs.current.push(null);
+          return;
+        }
+        var line = window.L.polyline(path, {
+          color: "#0b6da8",
+          weight: 4,
+          opacity: 0.48,
+          dashArray: leg.transportIndexes && leg.transportIndexes.length ? null : "8 8"
+        }).addTo(map);
+        lineRefs.current.push(line);
+      });
+
+      if (allLatLngs.length) {
+        map.fitBounds(allLatLngs, { padding: [26, 26], maxZoom: 13 });
+      }
+
+      setTimeout(function () { if (mapRef.current) mapRef.current.invalidateSize(); }, 60);
+      return function () {
+        if (mapRef.current) mapRef.current.remove();
+        mapRef.current = null;
+      };
+    }, [props.day.id]);
+
+    useEffect(function () {
+      lineRefs.current.forEach(function (line, index) {
+        if (!line) return;
+        line.setStyle({
+          weight: index === selectedLeg ? 7 : 4,
+          opacity: selectedLeg === null ? 0.48 : index === selectedLeg ? 0.92 : 0.18,
+          color: index === selectedLeg ? "#c86b4a" : "#0b6da8"
+        });
+      });
+      if (selectedLeg !== null && lineRefs.current[selectedLeg] && mapRef.current) {
+        var bounds = lineRefs.current[selectedLeg].getBounds();
+        if (bounds.isValid()) mapRef.current.fitBounds(bounds, { padding: [42, 42], maxZoom: 14 });
+      }
+    }, [selectedLeg]);
+
+    function locateMe() {
+      if (!navigator.geolocation) {
+        setLocateStatus("Géolocalisation indisponible");
+        return;
+      }
+      setLocateStatus("Localisation…");
+      navigator.geolocation.getCurrentPosition(function (position) {
+        var latLng = [position.coords.latitude, position.coords.longitude];
+        setLocateStatus("Position affichée");
+        if (!mapRef.current || !window.L) return;
+        if (userMarker.current) userMarker.current.remove();
+        userMarker.current = window.L.circleMarker(latLng, {
+          radius: 8, weight: 4, color: "#ffffff", fillColor: "#c86b4a", fillOpacity: 1
+        }).addTo(mapRef.current).bindTooltip("Ma position");
+        mapRef.current.setView(latLng, 14);
+      }, function () {
+        setLocateStatus("Position non disponible");
+      }, { enableHighAccuracy: true, timeout: 9000, maximumAge: 60000 });
+    }
+
+    if (!points.length) return null;
+    var activeLeg = selectedLeg !== null ? dayMeta.legs[selectedLeg] : null;
+
+    return h("section", { className: "section-block map-section" },
+      h("div", { className: "section-title map-title" },
+        h("div", null, h("span", { className: "kicker" }, "A → B → C"), h("h2", null, "La journée sur la carte")),
+        h("button", { className: "locate-btn", type: "button", onClick: locateMe }, h("span", { className: "locate-pulse" }), locateStatus || "Ma position")
+      ),
+      h("div", { className: "map-shell" },
+        h("div", { ref: mapNode, className: "day-map", "aria-label": "Carte du parcours de la journée" }),
+        h("div", { className: "map-caption" }, "Touchez un point ou un trajet pour approfondir")
+      ),
+      h("div", { className: "leg-strip" },
+        dayMeta.legs.map(function (leg, index) {
+          var firstTrip = leg.transportIndexes && leg.transportIndexes.length ? props.day.transports[leg.transportIndexes[0]] : null;
+          var mode = transportRow(firstTrip, /mode/i);
+          var timing = transportRow(firstTrip, /horaire/i);
+          return h("button", {
+            key: leg.title + index,
+            type: "button",
+            className: "leg-chip" + (selectedLeg === index ? " active" : ""),
+            onClick: function () { setSelectedLeg(index); }
+          },
+            h("span", { className: "leg-points" }, leg.from + " → " + leg.to),
+            h("strong", null, leg.title),
+            h("small", null, [mode ? mode.text : "", timing ? timing.text : ""].filter(Boolean).join(" · ") || "Voir les options")
+          );
+        })
+      ),
+      activeLeg ? h("article", { className: "leg-detail" },
+        h("div", { className: "leg-detail-head" },
+          h("div", null, h("span", { className: "point-badge" }, activeLeg.from + " → " + activeLeg.to), h("h3", null, activeLeg.title)),
+          h("a", {
+            href: (function () {
+              var from = pointById(activeLeg.from);
+              var to = pointById(activeLeg.to);
+              if (!from || !to) return "#";
+              return "https://maps.apple.com/?saddr=" + from.place.lat + "," + from.place.lng + "&daddr=" + to.place.lat + "," + to.place.lng;
+            })(),
+            target: "_blank", rel: "noopener", className: "mini-map-link"
+          }, h(SvgIcon, { name: "map", size: 16 }), " Plans")
+        ),
+        activeLeg.transportIndexes ? activeLeg.transportIndexes.map(function (transportIndex) {
+          var trip = props.day.transports[transportIndex];
+          if (!trip) return null;
+          var mode = transportRow(trip, /mode/i);
+          var timing = transportRow(trip, /horaire/i);
+          var payment = transportRow(trip, /paiement/i);
+          var where = transportRow(trip, /où/i);
+          return h("div", { className: "travel-option", key: transportIndex },
+            h("div", { className: "option-title" }, h("strong", null, trip.name), trip.tone === "critical" ? h("span", null, "Réservé / critique") : null),
+            h("div", { className: "option-grid" },
+              mode ? h("div", null, h("span", null, "Mode"), h("strong", null, mode.text)) : null,
+              timing ? h("div", null, h("span", null, "Horaire"), h("strong", null, timing.text)) : null,
+              payment ? h("div", null, h("span", null, "Paiement"), h("strong", null, payment.text)) : null
+            ),
+            where ? h("div", { className: "option-where" }, h("span", null, "Où / billet"), h("div", { dangerouslySetInnerHTML: { __html: where.html } })) : null
+          );
+        }) : null,
+        activeLeg.options ? activeLeg.options.map(function (option, index) {
+          return h("div", { className: "manual-option", key: option.label + index },
+            h("strong", null, option.label), h("span", null, option.detail)
+          );
+        }) : null,
+        activeLeg.resources && activeLeg.resources.length ? h("div", { className: "resource-links" },
+          activeLeg.resources.map(function (key) {
+            var resource = resourceForKey(key);
+            return resource ? h("a", { key: key, href: resource.url, target: "_blank", rel: "noopener" }, resource.label) : null;
+          })
+        ) : null
+      ) : null,
+      h("div", { className: "place-strip" },
+        points.map(function (point) {
+          return h("button", {
+            key: point.id,
+            type: "button",
+            className: "place-preview",
+            onClick: function () { props.onPlaceInfo({ placeKey: point.placeKey, pointId: point.id, place: point.place }); }
+          },
+            point.place.image ? h("img", { src: point.place.image, alt: "", loading: "lazy" }) :
+              h("span", { className: "place-preview-placeholder" }, point.id),
+            h("span", { className: "place-preview-copy" },
+              h("small", null, "Point " + point.id),
+              h("strong", null, point.place.name)
+            ),
+            h("span", { className: "place-info-mark" }, "i")
+          );
+        })
+      )
+    );
+  }
+
   function Header(props) {
     var tabs = [["trip", "Voyage"], ["prepare", "Préparer"], ["info", "Infos"]];
     return h("header", { className: "app-header" },
@@ -410,13 +767,15 @@
           var originalIndex = day.timeline.indexOf(item);
           var isNext = isToday && originalIndex === nextIndex;
           var isPast = isToday && item.parsedTime && item.parsedTime.total < nowMinutes && !isNext;
+          var matchedPlace = placeForText(day.id, item.text);
           var cls = "timeline-row tone-" + item.tone + (isNext ? " next" : "") + (isPast ? " past" : "");
           return h("div", { key: item.time + "-" + originalIndex, className: cls },
             h("div", { className: "timeline-time" }, item.time || "—"),
             h("div", { className: "timeline-dot" }),
             h("div", { className: "timeline-body" },
               isNext ? h("span", { className: "next-badge" }, "Prochaine étape") : null,
-              h("div", { dangerouslySetInnerHTML: { __html: item.html || item.text } })
+              h("div", { className: "timeline-copy", dangerouslySetInnerHTML: { __html: item.html || item.text } }),
+              matchedPlace && props.onPlaceInfo ? h(InfoDot, { onClick: function () { props.onPlaceInfo(matchedPlace); } }) : null
             )
           );
         })
@@ -438,6 +797,8 @@
       var b = day.hotel.toLocaleLowerCase("fr");
       return b && (a.indexOf(b) >= 0 || b.indexOf(a) >= 0);
     });
+    var hotelInfo = enrichedPlaceByName(day.hotel);
+    var hotelPhone = contact && contact.tel ? contact.tel : (hotelInfo && hotelInfo.place.phone ? hotelInfo.place.phone : "");
 
     function finishSwipe() {
       if (touchStart === null || touchEnd === null) return;
@@ -465,13 +826,17 @@
       ),
       h("div", { className: "day-facts" },
         day.cash ? h("div", { className: "fact" }, h("span", null, h(SvgIcon, { name: "wallet", size: 18 }), " Espèces"), h("strong", null, day.cash)) : null,
-        day.hotel ? h("div", { className: "fact" }, h("span", null, h(SvgIcon, { name: "map", size: 18 }), " Nuit"), h("strong", null, day.hotel)) : null
+        day.hotel ? h("div", { className: "fact fact-with-info" },
+          h("span", null, h(SvgIcon, { name: "map", size: 18 }), " Nuit"),
+          h("strong", null, day.hotel),
+          hotelInfo && props.onPlaceInfo ? h(InfoDot, { onClick: function () { props.onPlaceInfo(hotelInfo); } }) : null
+        ) : null
       ),
       day.hotel ? h("div", { className: "quick-actions" },
         h("a", { className: "action-btn", href: "https://maps.apple.com/?q=" + encodeURIComponent(day.hotel + " Grèce"), target: "_blank", rel: "noopener" }, h(SvgIcon, { name: "map", size: 18 }), " Itinéraire hôtel"),
-        contact && contact.tel ? h("a", { className: "action-btn", href: contact.tel }, h(SvgIcon, { name: "phone", size: 18 }), " Appeler") : null
+        hotelPhone ? h("a", { className: "action-btn", href: hotelPhone }, h(SvgIcon, { name: "phone", size: 18 }), " Appeler") : null
       ) : null,
-      h(Timeline, { day: day, isToday: props.isToday })
+      h(Timeline, { day: day, isToday: props.isToday, onPlaceInfo: props.onPlaceInfo })
     );
   }
 
@@ -517,6 +882,7 @@
     var state = useState({});
     var open = state[0];
     var setOpen = state[1];
+    var dayMeta = enrichmentDay(props.day.id);
     if (!props.day.transports.length) return null;
 
     return h("section", { className: "section-block" },
@@ -526,6 +892,14 @@
           var time = trip.rows.find(function (row) { return /horaire/i.test(row.key); });
           var pay = trip.rows.find(function (row) { return /paiement/i.test(row.key); });
           var expanded = !!open[index];
+          var resourceKeys = [];
+          dayMeta.legs.forEach(function (leg) {
+            if (leg.transportIndexes && leg.transportIndexes.indexOf(index) >= 0) {
+              (leg.resources || []).forEach(function (key) {
+                if (resourceKeys.indexOf(key) < 0) resourceKeys.push(key);
+              });
+            }
+          });
           return h("article", { key: trip.name + index, className: "transport-card tone-" + trip.tone },
             h("button", { type: "button", className: "transport-head", onClick: function () {
               var next = Object.assign({}, open);
@@ -539,7 +913,10 @@
                   pay ? h("span", null, pay.text) : null
                 )
               ),
-              h("span", { className: "chev" + (expanded ? " open" : "") }, h(SvgIcon, { name: "right", size: 18 }))
+              h("span", { className: "transport-head-tools" },
+                h("span", { className: "transport-info-mark" }, "i"),
+                h("span", { className: "chev" + (expanded ? " open" : "") }, h(SvgIcon, { name: "right", size: 18 }))
+              )
             ),
             expanded ? h("div", { className: "transport-details" },
               trip.rows.map(function (row) {
@@ -547,7 +924,13 @@
                   h("span", null, row.key),
                   h("div", { dangerouslySetInnerHTML: { __html: row.html } })
                 );
-              })
+              }),
+              resourceKeys.length ? h("div", { className: "resource-links transport-resources" },
+                resourceKeys.map(function (key) {
+                  var resource = resourceForKey(key);
+                  return resource ? h("a", { key: key, href: resource.url, target: "_blank", rel: "noopener" }, resource.label) : null;
+                })
+              ) : null
             ) : null
           );
         })
@@ -609,8 +992,10 @@
         onPrevious: function () { select(props.selectedDay - 1); },
         onNext: function () { select(props.selectedDay + 1); },
         isToday: props.selectedDay === todayIndex,
-        contacts: props.data.contacts
+        contacts: props.data.contacts,
+        onPlaceInfo: props.onPlaceInfo
       }),
+      h(DayMap, { day: selected, onPlaceInfo: props.onPlaceInfo }),
       h(UpcomingDays, { days: props.data.days, selected: props.selectedDay, onSelect: select }),
       h(TransportCards, { day: selected }),
       h(Notes, { day: selected }),
@@ -758,6 +1143,29 @@
         h("div", null, h("span", null, "Urgence en Grèce"), h("strong", null, "112")),
         h("span", { className: "emergency-call" }, h(SvgIcon, { name: "phone", size: 20 }), " Appeler")
       ),
+      h("section", { className: "section-block quick-info-block" },
+        h("div", { className: "section-title" }, h("div", null, h("span", { className: "kicker" }, "Un tap"), h("h2", null, "Contacts rapides"))),
+        h("div", { className: "contact-strip" },
+          props.data.contacts.filter(function (item) { return !!item.tel; }).map(function (item) {
+            return h("a", { key: item.name, href: item.tel, className: "contact-chip" },
+              h("span", { className: "contact-icon" }, h(SvgIcon, { name: "phone", size: 16 })),
+              h("span", null, h("strong", null, item.name), h("small", null, "Appeler"))
+            );
+          })
+        )
+      ),
+      h("section", { className: "section-block quick-info-block" },
+        h("div", { className: "section-title" }, h("div", null, h("span", { className: "kicker" }, "Réserver / vérifier"), h("h2", null, "Liens utiles"))),
+        h("div", { className: "service-grid" },
+          Object.keys(enrichmentRoot().resources || {}).map(function (key) {
+            var resource = resourceForKey(key);
+            return resource ? h("a", { key: key, href: resource.url, target: "_blank", rel: "noopener", className: "service-card" },
+              h("span", null, resource.label),
+              h("strong", null, "↗")
+            ) : null;
+          })
+        )
+      ),
       h("section", { className: "section-block" },
         h("div", { className: "section-title" }, h("div", null, h("span", { className: "kicker" }, "Références"), h("h2", null, "Informations utiles"))),
         h("div", { className: "info-accordions" },
@@ -860,6 +1268,9 @@
     var searchState = useState(false);
     var searchOpen = searchState[0];
     var setSearchOpen = searchState[1];
+    var placeState = useState(null);
+    var activePlace = placeState[0];
+    var setActivePlace = placeState[1];
     var status = tripStatus();
 
     useEffect(function () {
@@ -902,11 +1313,12 @@
     return h(Fragment, null,
       h(Header, { view: view, setView: setView, onSearch: function () { setSearchOpen(true); }, status: status }),
       h("div", { className: "app-shell" },
-        view === "trip" ? h(TripView, { data: data, selectedDay: selectedDay, setSelectedDay: setSelectedDay, status: status }) : null,
+        view === "trip" ? h(TripView, { data: data, selectedDay: selectedDay, setSelectedDay: setSelectedDay, status: status, onPlaceInfo: setActivePlace }) : null,
         view === "prepare" ? h(PrepareView, { data: data }) : null,
         view === "info" ? h(InfoView, { data: data, onSearch: function () { setSearchOpen(true); } }) : null
       ),
-      h(SearchOverlay, { data: data, open: searchOpen, onClose: function () { setSearchOpen(false); }, onNavigate: navigate })
+      h(SearchOverlay, { data: data, open: searchOpen, onClose: function () { setSearchOpen(false); }, onNavigate: navigate }),
+      h(PlaceSheet, { info: activePlace, contacts: data.contacts, onClose: function () { setActivePlace(null); } })
     );
   }
 
