@@ -602,6 +602,7 @@
       }),
       h(DayRail, { days: props.data.days, selected: props.selectedDay, onSelect: select, todayIndex: todayIndex }),
       h(DayFocus, {
+        key: selected.id,
         day: selected,
         selected: props.selectedDay,
         total: props.data.days.length,
