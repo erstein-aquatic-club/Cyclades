@@ -166,7 +166,7 @@ a{color:var(--cobalt)}
 
 /* Days navigation */
 .day-rail-wrap{
-  position:sticky;top:107px;z-index:75;margin:2px -12px 11px;
+  position:sticky;top:calc(107px + env(safe-area-inset-top));z-index:75;margin:2px -12px 11px;
   padding:8px 0 7px;background:rgba(251,250,246,.94);
   backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
   border-bottom:1px solid rgba(227,229,223,.7)
@@ -344,7 +344,7 @@ a{color:var(--cobalt)}
 .prepare-stats strong{display:block;font-size:1.1rem;color:var(--deep)}
 .prepare-stats span{display:block;font-size:.64rem;color:var(--muted);margin-top:2px}
 .subtabs{
-  position:sticky;top:107px;z-index:70;display:grid;grid-template-columns:repeat(3,1fr);
+  position:sticky;top:calc(107px + env(safe-area-inset-top));z-index:70;display:grid;grid-template-columns:repeat(3,1fr);
   gap:5px;padding:8px 0;background:rgba(251,250,246,.95);backdrop-filter:blur(14px)
 }
 .subtabs button,.mini-toggle button{
