@@ -306,6 +306,33 @@
     return enrichmentRoot().days[dayId] || { points: [], legs: [], featured: [] };
   }
 
+  function operationalDay(dayId) {
+    var operational = enrichmentRoot().operational || {};
+    return operational.days && operational.days[dayId] ? operational.days[dayId] : [];
+  }
+
+  function operationalGlobal() {
+    var operational = enrichmentRoot().operational || {};
+    return operational.global || [];
+  }
+
+  function riskWeight(level) {
+    return level === "critical" ? 3 : level === "attention" ? 2 : level === "info" ? 1 : 0;
+  }
+
+  function dayRiskLevel(dayId) {
+    var unresolved = operationalDay(dayId).filter(function (alert) {
+      return alert.level !== "ok" && storeGet("cyclades-risk-" + alert.id) !== "1";
+    });
+    var best = "";
+    var weight = 0;
+    unresolved.forEach(function (alert) {
+      var next = riskWeight(alert.level);
+      if (next > weight) { weight = next; best = alert.level; }
+    });
+    return best;
+  }
+
   function enrichedPlace(placeKey) {
     return enrichmentRoot().places[placeKey] || null;
   }
@@ -716,13 +743,15 @@
           var classes = "day-pill";
           if (props.selected === index) classes += " active";
           if (props.todayIndex === index) classes += " today";
+          var risk = dayRiskLevel(day.id);
+          if (risk) classes += " has-risk risk-" + risk;
           return h("button", {
             key: day.id,
             className: classes,
             type: "button",
             onClick: function () { props.onSelect(index); }
           },
-            h("span", { className: "day-num" }, "J" + day.number),
+            h("span", { className: "day-num" }, "J" + day.number, risk ? h("i", { className: "day-risk-dot", "aria-hidden": "true" }) : null),
             h("span", { className: "day-island" }, day.island),
             h("small", null, day.dateLabel)
           );
@@ -837,6 +866,93 @@
         hotelPhone ? h("a", { className: "action-btn", href: hotelPhone }, h(SvgIcon, { name: "phone", size: 18 }), " Appeler") : null
       ) : null,
       h(Timeline, { day: day, isToday: props.isToday, onPlaceInfo: props.onPlaceInfo })
+    );
+  }
+
+
+  function FrictionPanel(props) {
+    var tickState = useState(0);
+    var force = tickState[1];
+    var expandedState = useState(false);
+    var showResolved = expandedState[0];
+    var setShowResolved = expandedState[1];
+    var alerts = operationalDay(props.day.id);
+    if (!alerts.length) return null;
+
+    var pending = alerts.filter(function (alert) {
+      return alert.level === "ok" || storeGet("cyclades-risk-" + alert.id) !== "1";
+    });
+    var resolved = alerts.filter(function (alert) {
+      return alert.level !== "ok" && storeGet("cyclades-risk-" + alert.id) === "1";
+    });
+    var visible = pending.concat(showResolved ? resolved : []);
+
+    function resolve(alert) {
+      storeSet("cyclades-risk-" + alert.id, "1");
+      force(function (n) { return n + 1; });
+    }
+
+    var openRisks = pending.filter(function (alert) { return alert.level !== "ok"; });
+    var topLevel = openRisks.some(function (alert) { return alert.level === "critical"; }) ? "critical" :
+      openRisks.some(function (alert) { return alert.level === "attention"; }) ? "attention" :
+      openRisks.length ? "info" : "ok";
+
+    return h("section", { className: "section-block friction-panel panel-" + topLevel },
+      h("div", { className: "section-title friction-title" },
+        h("div", null,
+          h("span", { className: "kicker" }, openRisks.length ? "Pour ne pas se prendre la tête" : "Tout est sous contrôle"),
+          h("h2", null, openRisks.length ? "À anticiper" : "Points vérifiés")
+        ),
+        openRisks.length ? h("span", { className: "friction-count" }, openRisks.length + " point" + (openRisks.length > 1 ? "s" : "")) : null
+      ),
+      h("div", { className: "friction-list" },
+        visible.map(function (alert) {
+          var isResolved = alert.level !== "ok" && storeGet("cyclades-risk-" + alert.id) === "1";
+          return h("article", { key: alert.id, className: "friction-card level-" + alert.level + (isResolved ? " resolved" : "") },
+            h("div", { className: "friction-icon" }, alert.level === "critical" ? "!" : alert.level === "attention" ? "!" : alert.level === "ok" ? "✓" : "i"),
+            h("div", { className: "friction-copy" },
+              h("div", { className: "friction-card-head" },
+                h("strong", null, alert.title),
+                alert.level === "critical" ? h("span", { className: "severity-tag" }, "Important") :
+                  alert.level === "attention" ? h("span", { className: "severity-tag" }, "À vérifier") :
+                  alert.level === "ok" ? h("span", { className: "severity-tag verified" }, "Vérifié") : null
+              ),
+              h("p", null, alert.text),
+              alert.action ? h("div", { className: "friction-action" }, h("strong", null, "→ "), alert.action) : null,
+              h("div", { className: "friction-tools" },
+                alert.sourceUrl ? h("a", { href: alert.sourceUrl, target: "_blank", rel: "noopener" }, alert.sourceLabel || "Source") : null,
+                alert.level !== "ok" && !isResolved ? h("button", { type: "button", onClick: function () { resolve(alert); } }, "C’est réglé") : null,
+                isResolved ? h("span", { className: "resolved-label" }, "✓ Réglé") : null
+              )
+            )
+          );
+        })
+      ),
+      resolved.length ? h("button", { className: "show-resolved", type: "button", onClick: function () { setShowResolved(!showResolved); } },
+        showResolved ? "Masquer les points réglés" : "Voir " + resolved.length + " point" + (resolved.length > 1 ? "s" : "") + " réglé" + (resolved.length > 1 ? "s" : "")
+      ) : null
+    );
+  }
+
+  function TravelReflexes() {
+    var items = operationalGlobal();
+    if (!items.length) return null;
+    return h("section", { className: "travel-reflexes" },
+      h("div", { className: "section-title" },
+        h("div", null, h("span", { className: "kicker" }, "Derniers réflexes"), h("h2", null, "Avant chaque départ"))
+      ),
+      h("div", { className: "reflex-strip" },
+        items.map(function (item) {
+          return h("article", { className: "reflex-card level-" + item.level, key: item.id },
+            h("span", { className: "reflex-mark" }, item.level === "attention" ? "!" : "i"),
+            h("div", null,
+              h("strong", null, item.title),
+              h("p", null, item.text),
+              item.actionUrl ? h("a", { href: item.actionUrl, target: "_blank", rel: "noopener" }, item.actionLabel || "Ouvrir") : null
+            )
+          );
+        })
+      )
     );
   }
 
@@ -995,6 +1111,7 @@
         contacts: props.data.contacts,
         onPlaceInfo: props.onPlaceInfo
       }),
+      h(FrictionPanel, { day: selected }),
       h(DayMap, { day: selected, onPlaceInfo: props.onPlaceInfo }),
       h(UpcomingDays, { days: props.data.days, selected: props.selectedDay, onSelect: select }),
       h(TransportCards, { day: selected }),
@@ -1121,6 +1238,7 @@
         h("div", null, h("strong", null, props.data.tasks.length - taskDone), h("span", null, "actions restantes")),
         h("div", null, h("strong", null, allPack.length - packDone), h("span", null, "à mettre dans la valise"))
       ),
+      h(TravelReflexes),
       subnav,
       body
     );
