@@ -646,8 +646,21 @@ Bus et taxis 70-95€ · repas 280-390€ · activités et entrées 70-100€ pa
 <a href="#" class="top">↑</a>
 <script>
 if ('serviceWorker' in navigator && location.protocol === 'https:') {
+  var cycladesSwRefreshing = false;
+
+  navigator.serviceWorker.addEventListener('controllerchange', function () {
+    if (cycladesSwRefreshing) return;
+    cycladesSwRefreshing = true;
+    location.reload();
+  });
+
   window.addEventListener('load', function () {
-    navigator.serviceWorker.register('./sw.js').catch(function () {});
+    navigator.serviceWorker
+      .register('./sw.js', { updateViaCache: 'none' })
+      .then(function (registration) {
+        return registration.update();
+      })
+      .catch(function () {});
   });
 }
 </script>
