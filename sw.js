@@ -1,14 +1,22 @@
 // Cyclades — service worker
 // Strategie : reseau d'abord pour le contenu, cache en secours.
-// -> une mise a jour poussee sur GitHub apparait immediatement,
-//    et la page reste consultable hors ligne.
-const CACHE = 'cyclades';
+// Versionner le cache force iOS/Safari a abandonner les anciennes ressources.
+const CACHE = 'cyclades-v2-20260906';
 const ASSETS = ['./', './index.html', './manifest.webmanifest',
                 './icon-180.png', './icon-192.png', './icon-512.png'];
 
 self.addEventListener('install', e => {
   e.waitUntil(
-    caches.open(CACHE).then(c => c.addAll(ASSETS)).then(() => self.skipWaiting())
+    caches.open(CACHE)
+      .then(c => Promise.all(
+        ASSETS.map(asset =>
+          fetch(asset, { cache: 'reload' }).then(res => {
+            if (!res.ok) throw new Error('Precaching failed: ' + asset);
+            return c.put(asset, res);
+          })
+        )
+      ))
+      .then(() => self.skipWaiting())
   );
 });
 
@@ -26,9 +34,9 @@ self.addEventListener('fetch', e => {
   const estContenu = e.request.mode === 'navigate' || url.pathname.endsWith('.html');
 
   if (estContenu) {
-    // reseau d'abord : toujours la derniere version quand il y a du reseau
+    // Toujours tenter le reseau sans reutiliser le cache HTTP de Safari.
     e.respondWith(
-      fetch(e.request)
+      fetch(new Request(e.request, { cache: 'no-store' }))
         .then(res => {
           const copie = res.clone();
           caches.open(CACHE).then(c => c.put('./index.html', copie));
@@ -37,7 +45,7 @@ self.addEventListener('fetch', e => {
         .catch(() => caches.match('./index.html').then(r => r || caches.match('./')))
     );
   } else {
-    // images, manifest : cache d'abord, ils ne changent pas
+    // Ressources stables : cache d'abord.
     e.respondWith(
       caches.match(e.request).then(hit => hit || fetch(e.request).then(res => {
         const copie = res.clone();
