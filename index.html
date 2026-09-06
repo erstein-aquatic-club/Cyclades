@@ -93,6 +93,161 @@ footer{background:var(--navy);color:rgba(255,255,255,.55);text-align:center;padd
 .top{position:fixed;right:14px;bottom:16px;background:var(--navy);color:#fff;width:44px;height:44px;
 border-radius:50%;display:flex;align-items:center;justify-content:center;text-decoration:none;font-size:1.1rem;
 box-shadow:0 3px 12px rgba(0,0,0,.28);z-index:60}
+</style><style id="app-ux-v2">
+/* Couche UI/UX applicative — aucune donnée métier modifiée */
+:root{
+  --app-bg:#f3f6f8;
+  --app-panel:#ffffff;
+  --app-line:#dfe6eb;
+  --app-soft:#eef4f7;
+  --app-shadow:0 12px 34px rgba(15,27,45,.08);
+  --app-radius:18px;
+}
+html{scroll-behavior:smooth}
+body{background:var(--app-bg);padding-bottom:88px}
+header{
+  text-align:left;
+  padding:calc(18px + env(safe-area-inset-top)) max(20px,calc((100vw - 1180px)/2 + 20px)) 18px;
+  box-shadow:0 1px 0 rgba(255,255,255,.12) inset;
+}
+header h1{font-size:1.35rem}
+header .s{font-size:.84rem}
+header .p{margin-top:8px;padding:4px 10px}
+body>nav{display:none!important}
+.app-shell{
+  width:min(1180px,100%);
+  margin:0 auto;
+  padding:18px 14px 26px;
+}
+.app-sidebar{display:none}
+.app-main{min-width:0}
+.wrap.app-content{max-width:none;margin:0;padding:0}
+.app-view[hidden]{display:none!important}
+.app-view{animation:appFade .18s ease-out}
+@keyframes appFade{from{opacity:.45;transform:translateY(4px)}to{opacity:1;transform:none}}
+.app-overview{
+  background:linear-gradient(145deg,#fff,#f8fbfc);
+  border:1px solid var(--app-line);
+  border-radius:22px;
+  box-shadow:var(--app-shadow);
+  padding:18px;
+  margin:0 0 16px;
+}
+.app-kicker{font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--azure);font-weight:800}
+.app-overview h2{font-size:1.45rem;line-height:1.18;color:var(--navy);margin:4px 0 5px}
+.app-overview p{color:var(--mut);font-size:.9rem}
+.app-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:16px 0}
+.app-stat{background:var(--app-soft);border-radius:13px;padding:10px}
+.app-stat strong{display:block;color:var(--navy);font-size:1rem}
+.app-stat span{display:block;color:var(--mut);font-size:.69rem;margin-top:1px}
+.app-primary{
+  width:100%;border:0;border-radius:12px;background:var(--navy);color:#fff;
+  min-height:46px;padding:10px 14px;font:inherit;font-weight:700;cursor:pointer
+}
+.app-primary:active{transform:translateY(1px)}
+.app-progress{height:7px;background:#e4ebef;border-radius:999px;overflow:hidden;margin-top:9px}
+.app-progress>i{display:block;height:100%;background:var(--sage);border-radius:inherit;transition:width .2s ease}
+.app-progress-copy{display:flex;justify-content:space-between;gap:10px;margin-top:6px;font-size:.72rem;color:var(--mut)}
+.app-search{
+  position:relative;margin:0 0 14px;
+}
+.app-search input{
+  width:100%;height:44px;border:1px solid var(--app-line);border-radius:13px;background:#fff;
+  padding:0 42px 0 14px;font:inherit;font-size:.88rem;color:var(--tx);outline:none;
+  box-shadow:0 4px 14px rgba(15,27,45,.04)
+}
+.app-search input:focus{border-color:var(--sky);box-shadow:0 0 0 3px rgba(77,168,212,.14)}
+.app-search button{
+  position:absolute;right:4px;top:4px;width:36px;height:36px;border:0;border-radius:10px;
+  background:transparent;color:var(--azure);font-size:1rem;cursor:pointer
+}
+.app-search-status{font-size:.72rem;color:var(--mut);min-height:18px;padding:3px 4px 0}
+.app-highlight{outline:3px solid rgba(77,168,212,.35)!important;outline-offset:3px;border-radius:10px}
+.app-daystrip{
+  position:sticky;top:8px;z-index:35;display:flex;gap:7px;overflow-x:auto;
+  scrollbar-width:none;padding:8px;margin:0 -2px 12px;background:rgba(243,246,248,.92);
+  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)
+}
+.app-daystrip::-webkit-scrollbar{display:none}
+.app-day{
+  flex:0 0 auto;border:1px solid var(--app-line);background:#fff;color:var(--navy);
+  border-radius:12px;padding:8px 11px;font:inherit;font-weight:750;font-size:.78rem;cursor:pointer
+}
+.app-day small{display:block;font-size:.61rem;color:var(--mut);font-weight:550;margin-top:1px}
+.app-day.active{background:var(--navy);color:#fff;border-color:var(--navy)}
+.app-day.active small{color:#d3e2ed}
+h2.sec{
+  font-size:1.08rem;margin:20px 0 10px;padding:0;border:0;color:var(--navy);
+  display:flex;align-items:center;gap:8px
+}
+h2.sec:before{content:"";width:4px;height:18px;border-radius:99px;background:var(--sky)}
+details{
+  border:1px solid var(--app-line);border-radius:16px;margin-bottom:10px;background:var(--app-panel);
+  box-shadow:0 4px 16px rgba(15,27,45,.035)
+}
+details[open]{box-shadow:var(--app-shadow);border-color:#cfdbe2}
+summary{padding:14px 15px;min-height:64px}
+summary::after{font-size:1rem}
+.body{padding:0 14px 15px}
+.box{border-left-width:3px;border-radius:13px}
+.trip{border-color:var(--app-line);border-radius:13px;background:#fff}
+.cash{border-radius:13px}
+.tl{padding:10px 0}
+table{background:#fff;border-radius:13px;overflow:hidden}
+.app-table-scroll{
+  overflow-x:auto;-webkit-overflow-scrolling:touch;border:1px solid var(--app-line);
+  border-radius:13px;background:#fff;margin:10px 0
+}
+.app-table-scroll table{margin:0;min-width:520px;border-radius:0}
+.app-table-scroll th:first-child,.app-table-scroll td:first-child{padding-left:12px}
+label.ck{border-color:#edf1f3}
+label.ck input{width:22px;height:22px}
+label.ck.is-done .n{text-decoration:line-through;color:var(--mut)}
+label.ck.is-done .y{opacity:.7}
+.btn{min-height:42px;display:inline-flex;align-items:center;justify-content:center}
+.top{display:none!important}
+.app-bottom{
+  position:fixed;left:0;right:0;bottom:0;z-index:80;
+  display:grid;grid-template-columns:repeat(4,1fr);
+  padding:6px max(8px,env(safe-area-inset-left)) calc(6px + env(safe-area-inset-bottom));
+  background:rgba(15,27,45,.96);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  box-shadow:0 -6px 24px rgba(15,27,45,.18)
+}
+.app-navbtn{
+  border:0;background:transparent;color:#aebdcc;border-radius:11px;min-height:52px;
+  font:inherit;font-size:.67rem;font-weight:700;cursor:pointer;padding:5px 2px
+}
+.app-navbtn .ico{display:block;font-size:1.15rem;line-height:1.1;margin-bottom:3px}
+.app-navbtn.active{color:#fff;background:rgba(255,255,255,.1)}
+footer{margin-top:0;padding-bottom:calc(26px + env(safe-area-inset-bottom))}
+@media (min-width:900px){
+  body{padding-bottom:0}
+  header{padding-top:22px;padding-bottom:20px}
+  .app-shell{display:grid;grid-template-columns:236px minmax(0,1fr);gap:22px;padding-top:24px}
+  .app-sidebar{display:block;position:sticky;top:18px;align-self:start}
+  .app-sidecard{
+    background:#fff;border:1px solid var(--app-line);border-radius:18px;padding:10px;
+    box-shadow:0 10px 30px rgba(15,27,45,.06)
+  }
+  .app-sidebrand{padding:10px 10px 12px;font-weight:800;color:var(--navy);font-size:.92rem}
+  .app-sidebrand small{display:block;color:var(--mut);font-size:.7rem;font-weight:500;margin-top:2px}
+  .app-sidenav{display:grid;gap:5px}
+  .app-sidenav .app-navbtn{
+    color:var(--navy);display:flex;align-items:center;gap:10px;text-align:left;
+    padding:10px 11px;min-height:44px;font-size:.82rem
+  }
+  .app-sidenav .app-navbtn .ico{display:inline;margin:0;width:22px;text-align:center}
+  .app-sidenav .app-navbtn.active{background:var(--navy);color:#fff}
+  .app-bottom{display:none}
+  .app-main{max-width:920px}
+  .app-overview{padding:22px}
+  .app-primary{width:auto;min-width:220px}
+  .app-daystrip{top:12px}
+  .app-table-scroll table{min-width:0}
+}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}.app-view{animation:none}.app-progress>i{transition:none}
+}
 </style></head><body>
 
 <header>
@@ -497,4 +652,205 @@ if ('serviceWorker' in navigator && location.protocol === 'https:') {
 }
 </script>
 <footer>Circuit Cyclades · 9 → 18 septembre 2026<br>Santorin 3N · Naxos 3N · Paros 2N · Mykonos 1N<br>Document unique — généré depuis la même source que le PDF<br><span style="opacity:.6">version 06/09/2026 18:46 UTC</span></footer>
-</body></html>
+<script id="app-ux-runtime">
+(function(){
+  'use strict';
+  function ready(fn){if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',fn);else fn()}
+  ready(function(){
+    var wrap=document.querySelector('.wrap');
+    if(!wrap || wrap.dataset.appified==='1') return;
+    wrap.dataset.appified='1';
+    wrap.classList.add('app-content');
+
+    var existing=[].slice.call(wrap.children);
+    var views={
+      home:document.createElement('section'),
+      itinerary:document.createElement('section'),
+      prepare:document.createElement('section'),
+      info:document.createElement('section')
+    };
+    Object.keys(views).forEach(function(k){views[k].className='app-view';views[k].dataset.view=k});
+    var mode='home';
+    existing.forEach(function(node){
+      if(node.id==='valise') mode='prepare';
+      if((node.tagName==='H2' && (node.textContent||'').trim()==='Les 10 journées') || (node.matches && node.matches('details#j1'))) mode='itinerary';
+      if(node.id==='trsp') mode='info';
+      views[mode].appendChild(node);
+    });
+
+    var shell=document.createElement('div'); shell.className='app-shell';
+    var aside=document.createElement('aside'); aside.className='app-sidebar';
+    var main=document.createElement('main'); main.className='app-main';
+    wrap.parentNode.insertBefore(shell,wrap);
+    shell.appendChild(aside); shell.appendChild(main);
+    main.appendChild(wrap);
+
+    var navItems=[
+      ['home','⌂','Accueil'],
+      ['itinerary','◷','Itinéraire'],
+      ['prepare','✓','Préparer'],
+      ['info','☰','Infos']
+    ];
+    function navMarkup(cls){
+      var el=document.createElement('div'); el.className=cls;
+      navItems.forEach(function(item){
+        var b=document.createElement('button');
+        b.type='button'; b.className='app-navbtn'; b.dataset.target=item[0];
+        b.innerHTML='<span class="ico" aria-hidden="true">'+item[1]+'</span><span>'+item[2]+'</span>';
+        b.addEventListener('click',function(){switchView(item[0],true)});
+        el.appendChild(b);
+      });
+      return el;
+    }
+
+    var sideCard=document.createElement('div'); sideCard.className='app-sidecard';
+    var sideBrand=document.createElement('div'); sideBrand.className='app-sidebrand';
+    sideBrand.innerHTML='Cyclades <small>9 → 18 septembre 2026</small>';
+    sideCard.appendChild(sideBrand);
+    sideCard.appendChild(navMarkup('app-sidenav'));
+    aside.appendChild(sideCard);
+
+    var bottom=navMarkup('app-bottom');
+    document.body.appendChild(bottom);
+
+    var search=document.createElement('form'); search.className='app-search'; search.setAttribute('role','search');
+    search.innerHTML='<input type="search" aria-label="Rechercher dans le voyage" placeholder="Rechercher un lieu, horaire, contact…"><button type="submit" aria-label="Lancer la recherche">⌕</button><div class="app-search-status" aria-live="polite"></div>';
+    main.insertBefore(search,wrap);
+    var searchInput=search.querySelector('input'), searchStatus=search.querySelector('.app-search-status');
+
+    Object.keys(views).forEach(function(k){wrap.appendChild(views[k])});
+
+    var days=[].slice.call(views.itinerary.querySelectorAll('details[id^="j"]'));
+    var dayHeading=[].slice.call(views.itinerary.children).find(function(n){return n.tagName==='H2'});
+    var daystrip=document.createElement('div'); daystrip.className='app-daystrip'; daystrip.setAttribute('aria-label','Choisir un jour');
+    days.forEach(function(d,i){
+      var btn=document.createElement('button'); btn.type='button'; btn.className='app-day'; btn.dataset.day=d.id;
+      var title=d.querySelector('.sm-t'); var meta=d.querySelector('.sm-d');
+      btn.innerHTML='J'+(i+1)+'<small>'+((meta?meta.textContent:'').split('·')[0].trim()||'Jour '+(i+1))+'</small>';
+      btn.title=title?title.textContent:'J'+(i+1);
+      btn.addEventListener('click',function(){openDay(d.id,true)});
+      daystrip.appendChild(btn);
+    });
+    if(dayHeading) dayHeading.insertAdjacentElement('afterend',daystrip); else views.itinerary.insertBefore(daystrip,views.itinerary.firstChild);
+
+    function wrapTables(){
+      [].slice.call(wrap.querySelectorAll('table')).forEach(function(t){
+        if(t.parentElement && t.parentElement.classList.contains('app-table-scroll')) return;
+        var sc=document.createElement('div'); sc.className='app-table-scroll';
+        t.parentNode.insertBefore(sc,t); sc.appendChild(t);
+      });
+    }
+    wrapTables();
+
+    function checklistStats(){
+      var boxes=[].slice.call(document.querySelectorAll('label.ck input[type="checkbox"]'));
+      var done=boxes.filter(function(b){return b.checked}).length;
+      return {done:done,total:boxes.length,pct:boxes.length?Math.round(done/boxes.length*100):0};
+    }
+    var boxInputs=[].slice.call(document.querySelectorAll('label.ck input[type="checkbox"]'));
+    boxInputs.forEach(function(input,i){
+      var key='cyclades-check-'+i;
+      input.checked=localStorage.getItem(key)==='1';
+      input.closest('label.ck').classList.toggle('is-done',input.checked);
+      input.addEventListener('change',function(){
+        localStorage.setItem(key,input.checked?'1':'0');
+        input.closest('label.ck').classList.toggle('is-done',input.checked);
+        refreshProgress();
+      });
+    });
+
+    var overview=document.createElement('div'); overview.className='app-overview';
+    var islandCount=(document.querySelector('header .s')?.textContent||'').split('·').filter(Boolean).length||4;
+    var now=new Date(), start=new Date(2026,8,9), end=new Date(2026,8,18,23,59,59);
+    var msDay=86400000;
+    var status='', nextIndex=0;
+    if(now<start){
+      var diff=Math.ceil((start-new Date(now.getFullYear(),now.getMonth(),now.getDate()))/msDay);
+      status='Départ dans '+diff+' jour'+(diff>1?'s':'');
+      nextIndex=0;
+    }else if(now<=end){
+      nextIndex=Math.max(0,Math.min(9,Math.floor((new Date(now.getFullYear(),now.getMonth(),now.getDate())-start)/msDay)));
+      status='Jour '+(nextIndex+1)+' sur '+days.length;
+    }else{
+      nextIndex=days.length-1; status='Voyage terminé';
+    }
+    overview.innerHTML=
+      '<div class="app-kicker">'+status+'</div>'+
+      '<h2>Votre voyage, au bon endroit au bon moment.</h2>'+
+      '<p>Les mêmes informations, regroupées en vues rapides pour être consultées facilement sur place.</p>'+
+      '<div class="app-stats">'+
+        '<div class="app-stat"><strong>'+days.length+'</strong><span>jours</span></div>'+
+        '<div class="app-stat"><strong>'+islandCount+'</strong><span>îles</span></div>'+
+        '<div class="app-stat"><strong id="app-check-count">0/'+boxInputs.length+'</strong><span>éléments prêts</span></div>'+
+      '</div>'+
+      '<button type="button" class="app-primary">Ouvrir '+(now<start?'le premier jour':'le jour '+(nextIndex+1))+'</button>'+
+      '<div class="app-progress"><i style="width:0%"></i></div>'+
+      '<div class="app-progress-copy"><span>Préparation</span><span id="app-progress-label">0%</span></div>';
+    views.home.insertBefore(overview,views.home.firstChild);
+    overview.querySelector('.app-primary').addEventListener('click',function(){openDay('j'+(nextIndex+1),true)});
+    function refreshProgress(){
+      var s=checklistStats();
+      var count=document.getElementById('app-check-count'), lab=document.getElementById('app-progress-label'), bar=overview.querySelector('.app-progress i');
+      if(count) count.textContent=s.done+'/'+s.total;
+      if(lab) lab.textContent=s.pct+'%';
+      if(bar) bar.style.width=s.pct+'%';
+    }
+    refreshProgress();
+
+    function switchView(name,remember){
+      if(!views[name]) name='home';
+      Object.keys(views).forEach(function(k){views[k].hidden=k!==name});
+      [].slice.call(document.querySelectorAll('.app-navbtn')).forEach(function(b){
+        var active=b.dataset.target===name; b.classList.toggle('active',active); b.setAttribute('aria-current',active?'page':'false');
+      });
+      if(remember) localStorage.setItem('cyclades-view',name);
+      window.scrollTo({top:0,behavior:'smooth'});
+    }
+    function openDay(id,scroll){
+      var d=document.getElementById(id); if(!d) return;
+      switchView('itinerary',true);
+      days.forEach(function(x){x.open=x===d});
+      [].slice.call(daystrip.querySelectorAll('.app-day')).forEach(function(b){b.classList.toggle('active',b.dataset.day===id)});
+      try{history.replaceState(null,'','#'+id)}catch(e){}
+      if(scroll) setTimeout(function(){d.scrollIntoView({behavior:'smooth',block:'start'})},80);
+    }
+
+    days.forEach(function(d){
+      d.addEventListener('toggle',function(){
+        if(!d.open) return;
+        days.forEach(function(other){if(other!==d)other.open=false});
+        [].slice.call(daystrip.querySelectorAll('.app-day')).forEach(function(b){b.classList.toggle('active',b.dataset.day===d.id)});
+      });
+    });
+
+    function findViewFor(el){
+      var v=el.closest('.app-view'); return v?v.dataset.view:'home';
+    }
+    search.addEventListener('submit',function(e){
+      e.preventDefault();
+      var q=(searchInput.value||'').trim().toLocaleLowerCase('fr');
+      if(!q){searchStatus.textContent='';return}
+      var candidates=[].slice.call(wrap.querySelectorAll('summary,h2,h3,.box,.trip,.tl,td'));
+      var hit=candidates.find(function(el){return (el.textContent||'').toLocaleLowerCase('fr').includes(q)});
+      if(!hit){searchStatus.textContent='Aucun résultat pour « '+searchInput.value.trim()+' »';return}
+      var v=findViewFor(hit); switchView(v,true);
+      var det=hit.closest('details'); if(det){days.forEach(function(x){x.open=x===det})}
+      searchStatus.textContent='Résultat trouvé dans '+({home:'Accueil',itinerary:'Itinéraire',prepare:'Préparer',info:'Infos'}[v]||v);
+      hit.classList.add('app-highlight');
+      setTimeout(function(){hit.scrollIntoView({behavior:'smooth',block:'center'})},80);
+      setTimeout(function(){hit.classList.remove('app-highlight')},2200);
+    });
+
+    var hash=(location.hash||'').slice(1);
+    var initial='home';
+    if(/^j\d+$/.test(hash)){initial='itinerary';setTimeout(function(){openDay(hash,false)},0)}
+    else if(hash==='valise'||hash==='cash') initial='prepare';
+    else if(hash==='trsp'||hash==='bateau'||hash==='contacts') initial='info';
+    else initial=localStorage.getItem('cyclades-view')||'home';
+    switchView(initial,false);
+    if(initial==='itinerary' && !days.some(function(d){return d.open})){
+      var defaultDay=days[nextIndex]||days[0]; if(defaultDay) defaultDay.open=true;
+    }
+  });
+})();
+</script></body></html>
