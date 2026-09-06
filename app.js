@@ -585,7 +585,10 @@
       requestAnimationFrame(function () {
         var target = document.querySelector(".day-focus");
         if (target) {
-          var top = target.getBoundingClientRect().top + window.scrollY - 178;
+          var header = document.querySelector(".app-header");
+          var rail = document.querySelector(".day-rail-wrap");
+          var offset = (header ? header.offsetHeight : 107) + (rail ? rail.offsetHeight : 72) + 8;
+          var top = target.getBoundingClientRect().top + window.scrollY - offset;
           window.scrollTo({ top: top, behavior: "smooth" });
         }
       });
