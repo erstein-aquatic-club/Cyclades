@@ -1,5 +1,81 @@
 /* Curated UI enrichment. Raw trip data remains in trip-data.html. */
 window.CYCLADES_ENRICHMENT = {
+  packing: {
+    people: 2,
+    laundry: {
+      day:"J5 · dimanche 13 septembre",
+      place:"Mare Naxia",
+      deposit:"Le matin avant la plage",
+      return:"Lundi 14 septembre",
+      strategy:"Laver les vêtements portés J1→J4. Les vêtements gardés propres couvrent J5 et J6 jusqu’au retour du linge."
+    },
+    summary: {
+      outfitMoments:17,
+      doubleOutfitDays:[2,3,4,5,7,8,9],
+      note:"7 journées demandent un vrai changement de tenue entre activité / plage et soirée. La capsule soirée est réutilisée, pas dupliquée 7 fois."
+    },
+    wardrobe: [
+      { id:"day-tops", label:"Hauts de journée", count:5, unit:"pièces", group:"Vêtements", essential:true, note:"Dont 2 respirants / séchage rapide pour J2 randonnée et J3 volcan. Les 5 couvrent J1→J5 puis repassent à la lessive." },
+      { id:"day-bottoms", label:"Bas de journée", count:3, unit:"pièces", group:"Vêtements", essential:true, note:"1 pantalon léger/trek + 2 shorts, jupes ou bas légers. Le pantalon peut être porté dans l’avion." },
+      { id:"evening-tops", label:"Hauts un peu habillés", count:2, unit:"pièces", group:"Soirées", essential:true, note:"À alterner pour Strogili, Sigi Ikthios et Mykonos. Suffisant avec la lessive." },
+      { id:"evening-bottom", label:"Bas habillé polyvalent", count:1, unit:"pièce", group:"Soirées", essential:true, note:"Ou remplace ce duo par 2 robes/combinaisons légères si c’est plus naturel pour toi." },
+      { id:"underwear", label:"Sous-vêtements", count:7, unit:"paires", group:"Vêtements", essential:true, note:"5 jours + 1 jour de retour de lessive + 1 marge. Le but est de ne jamais dépendre d’un retour de linge à l’heure près." },
+      { id:"socks", label:"Paires de chaussettes", count:5, unit:"paires", group:"Vêtements", essential:true, note:"Dont 3 adaptées à la marche. Peu utiles les jours plage/sandales, donc 5 suffisent avec la lessive." },
+      { id:"swimwear", label:"Maillots de bain", count:2, unit:"pièces", group:"Mer", essential:true, note:"1 foncé dédié aux sources sulfureuses de Palea Kameni + 1 normal pour les plages." },
+      { id:"sleepwear", label:"Tenue de nuit", count:1, unit:"tenue", group:"Vêtements", essential:true, note:"Légère et lavable rapidement si nécessaire." },
+      { id:"light-layer", label:"Surchemise / gilet léger", count:1, unit:"pièce", group:"Couches", essential:true, note:"Pour les terrasses, ferries climatisés et soirées venteuses." },
+      { id:"windbreaker", label:"Coupe-vent fin", count:1, unit:"pièce", group:"Couches", essential:true, note:"À porter sur soi dans l’avion. Très utile sur les ferries et les points de vue au coucher du soleil." },
+      { id:"walking-shoes", label:"Chaussures de marche solides", count:1, unit:"paire", group:"Chaussures", essential:true, note:"À porter dans l’avion. Pour Fira→Oia, Nea Kameni et les villages." },
+      { id:"sandals", label:"Sandales / chaussures légères propres", count:1, unit:"paire", group:"Chaussures", essential:true, note:"Plage + soirées. Choisir une paire assez propre pour les restaurants afin d’éviter une troisième paire." }
+    ],
+    dayPlan: [
+      { day:1, outfits:1, label:"Voyage + dîner", wear:["pantalon léger","haut confortable","couche légère"], note:"Même tenue pour le dîner si elle reste propre." },
+      { day:2, outfits:2, label:"Randonnée + Strogili", wear:["haut technique","bas marche","chaussettes marche","tenue soirée"], note:"Vrai changement nécessaire après 10 km de marche." },
+      { day:3, outfits:2, label:"Akrotiri + volcan + dîner", wear:["haut technique","bas marche","maillot foncé","tenue propre soir"], note:"Le soufre justifie un maillot dédié et un changement complet après la douche." },
+      { day:4, outfits:2, label:"Ferry + plage + dîner", wear:["tenue voyage","maillot","haut propre soir"], note:"La tenue du soir peut être simple, pas forcément habillée." },
+      { day:5, outfits:2, label:"Plages + soirée Naxos", wear:["maillot normal","tenue plage","haut propre soir"], note:"Déposer la lessive le matin avant de partir." },
+      { day:6, outfits:1, label:"Villages de montagne", wear:["haut journée","bas marche","couche légère"], note:"Pas besoin de tenue séparée si dîner tranquille." },
+      { day:7, outfits:2, label:"Ferry/Parikia + Sigi Ikthios", wear:["tenue voyage","tenue soirée"], note:"Deuxième utilisation de la capsule habillée." },
+      { day:8, outfits:2, label:"Kolymbithres + dîner", wear:["maillot","tenue plage","haut propre soir"], note:"Prévoir quelque chose de sec pour le coucher du soleil." },
+      { day:9, outfits:2, label:"Mykonos journée + dernière soirée", wear:["tenue journée","maillot","tenue soirée"], note:"Troisième utilisation de la capsule habillée." },
+      { day:10, outfits:1, label:"Retour avion + TGV", wear:["pantalon léger","haut confortable","couche légère"], note:"Choisir une tenue propre et confortable la veille." }
+    ],
+    extras: [
+      { id:"daypack", label:"Petit sac à dos 15–20 L", count:1, per:"person", group:"Activités", priority:"high", note:"Plus utile qu’un simple sac de plage pour J2/J3 : eau, coupe-vent, serviette, snacks et batterie." },
+      { id:"microfiber-towel", label:"Serviette microfibre foncée", count:1, per:"person", group:"Mer", priority:"high", note:"Demandée pour l’excursion volcan ; séchage rapide et peu de volume." },
+      { id:"wet-bag", label:"Pochette étanche / sac pour linge mouillé", count:1, per:"person", group:"Mer", priority:"high", note:"Très pratique après Palea Kameni et les plages pour isoler maillot/serviette humide." },
+      { id:"phone-pouch", label:"Pochette téléphone étanche", count:1, per:"couple", group:"Mer", priority:"medium", note:"Excursion bateau, bateau-taxi et plages. Évite de manipuler le téléphone nu près de l’eau." },
+      { id:"repellent", label:"Répulsif anti-moustiques", count:1, per:"couple", group:"Santé", priority:"medium", note:"Petit format ; utile surtout le soir et dans les zones moins ventées." },
+      { id:"health-kit", label:"Mini trousse santé habituelle", count:1, per:"couple", group:"Santé", priority:"high", note:"Antalgiques habituels, pansements, anti-ampoules, désinfectant, traitements personnels et quelques sachets de réhydratation." },
+      { id:"laundry-sheets", label:"2 feuilles de lessive / dose solide", count:2, per:"couple", group:"Lessive", priority:"medium", note:"Évite d’acheter un flacon et ne compte pas dans les liquides cabine." },
+      { id:"laundry-bag", label:"Sac léger pour linge sale", count:1, per:"couple", group:"Lessive", priority:"medium", note:"Permet de déposer la lessive du J5 en quelques secondes." },
+      { id:"charger", label:"Chargeur USB multiport + câbles courts", count:1, per:"couple", group:"Tech", priority:"high", note:"Un seul chargeur secteur suffit pour deux téléphones + montre/batterie." },
+      { id:"powerbank", label:"Batterie externe", count:1, per:"couple", group:"Tech", priority:"high", note:"À garder en cabine ; utile pour cartes, billets et journées longues." },
+      { id:"id-card", label:"Carte d’identité", count:1, per:"person", group:"Documents", priority:"high", note:"Une par personne, dans la pochette documents mais accessible aux contrôles." },
+      { id:"ehic", label:"Carte européenne d’assurance maladie", count:1, per:"person", group:"Documents", priority:"high", note:"Une par personne ; la version numérique peut compléter la carte physique." },
+      { id:"offline-tickets", label:"Billets hors ligne sur les 2 téléphones", count:1, per:"couple", group:"Documents", priority:"high", note:"Transavia, SNCF, trois ferries SeaJets et excursion volcan. Duplique les PDF sur les deux téléphones." },
+      { id:"bank-cards", label:"Cartes bancaires séparées", count:2, per:"couple", group:"Documents", priority:"high", note:"Une carte chacun ou deux cartes rangées séparément, pour éviter un point de panne unique." },
+      { id:"earplugs", label:"Bouchons d’oreilles / masque de nuit", count:1, per:"person", group:"Confort", priority:"low", note:"Très peu volumineux et utiles si hôtel/port animé ou départ matinal." },
+      { id:"zip-pouch", label:"Pochette zippée documents + cash", count:1, per:"couple", group:"Organisation", priority:"high", note:"Regroupe espèces, cartes d’identité et sauvegardes de billets sans chercher dans le sac." },
+      { id:"hat", label:"Chapeau / casquette", count:1, per:"person", group:"Soleil", priority:"high", note:"Indispensable J2/J3 où l’ombre est rare." },
+      { id:"sunglasses", label:"Lunettes de soleil", count:1, per:"person", group:"Soleil", priority:"high", note:"À garder accessible, pas au fond de la valise." },
+      { id:"bottle", label:"Gourde 750 ml env.", count:1, per:"person", group:"Soleil", priority:"high", note:"À remplir après le contrôle aéroport et avant les randonnées." }
+    ],
+    buyLocally: [
+      "Crème solaire si votre flacon cabine de 100 ml ne suffit pas",
+      "Gel douche / shampoing grand format",
+      "Eau et snacks pour la randonnée / bateau",
+      "Produits de plage consommables"
+    ],
+    skip: [
+      "Adaptateur secteur",
+      "Troisième paire de chaussures",
+      "Serviette de plage épaisse",
+      "Tenue habillée différente pour chaque dîner",
+      "Gros flacons de toilette",
+      "Vêtements « au cas où » sans journée précise"
+    ]
+  },
   operational: {
     global: [
       {
