@@ -94,159 +94,236 @@ footer{background:var(--navy);color:rgba(255,255,255,.55);text-align:center;padd
 border-radius:50%;display:flex;align-items:center;justify-content:center;text-decoration:none;font-size:1.1rem;
 box-shadow:0 3px 12px rgba(0,0,0,.28);z-index:60}
 </style><style id="app-ux-v2">
-/* Couche UI/UX applicative — aucune donnée métier modifiée */
+/* Cyclades V3 — couche UI/UX uniquement. Le contenu métier source reste intact. */
 :root{
-  --app-bg:#f3f6f8;
-  --app-panel:#ffffff;
-  --app-line:#dfe6eb;
-  --app-soft:#eef4f7;
-  --app-shadow:0 12px 34px rgba(15,27,45,.08);
-  --app-radius:18px;
+  --app-bg:#f4f7f9;--app-panel:#fff;--app-line:#dfe7ec;--app-soft:#eef3f6;
+  --app-soft2:#f8fafb;--app-ink:#102033;--app-muted:#677785;--app-blue:#17628f;
+  --app-green:#2f7048;--app-amber:#9a6612;--app-red:#b94b32;--app-shadow:0 10px 28px rgba(15,27,45,.07);
 }
-html{scroll-behavior:smooth}
-body{background:var(--app-bg);padding-bottom:88px}
-header{
-  text-align:left;
-  padding:calc(18px + env(safe-area-inset-top)) max(20px,calc((100vw - 1180px)/2 + 20px)) 18px;
-  box-shadow:0 1px 0 rgba(255,255,255,.12) inset;
+*{-webkit-tap-highlight-color:transparent}
+html{scroll-behavior:smooth;background:var(--app-bg)}
+body{background:var(--app-bg);padding:calc(64px + env(safe-area-inset-top)) 0 calc(82px + env(safe-area-inset-bottom));color:var(--app-ink)}
+body>header,body>nav,.top{display:none!important}
+body>footer{margin-top:0;padding:20px 16px calc(20px + env(safe-area-inset-bottom));font-size:.68rem;opacity:.72}
+.app-topbar{
+  position:fixed;left:0;right:0;top:0;z-index:100;height:calc(58px + env(safe-area-inset-top));
+  padding:env(safe-area-inset-top) 12px 0;background:rgba(255,255,255,.96);
+  border-bottom:1px solid var(--app-line);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)
 }
-header h1{font-size:1.35rem}
-header .s{font-size:.84rem}
-header .p{margin-top:8px;padding:4px 10px}
-body>nav{display:none!important}
-.app-shell{
-  width:min(1180px,100%);
-  margin:0 auto;
-  padding:18px 14px 26px;
+.app-topbar-inner{height:58px;max-width:1180px;margin:auto;display:flex;align-items:center;gap:10px}
+.app-top-title{min-width:0;flex:1}
+.app-top-title strong{display:block;font-size:1rem;line-height:1.2;color:var(--app-ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.app-top-title span{display:block;font-size:.68rem;color:var(--app-muted);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.app-sync{
+  border:0;background:var(--app-soft);color:var(--app-muted);height:34px;border-radius:999px;padding:0 10px;
+  font:inherit;font-size:.68rem;font-weight:750;display:flex;align-items:center;gap:6px
 }
-.app-sidebar{display:none}
-.app-main{min-width:0}
+.app-dot{width:7px;height:7px;border-radius:50%;background:var(--app-green)}
+.app-sync.offline .app-dot{background:var(--app-amber)}
+.app-iconbtn{
+  width:42px;height:42px;border:1px solid var(--app-line);border-radius:13px;background:#fff;color:var(--app-ink);
+  display:grid;place-items:center;font-size:1.05rem;font-weight:800;cursor:pointer
+}
+.app-shell{width:min(1180px,100%);margin:0 auto;padding:14px 12px 24px}
 .wrap.app-content{max-width:none;margin:0;padding:0}
 .app-view[hidden]{display:none!important}
-.app-view{animation:appFade .18s ease-out}
-@keyframes appFade{from{opacity:.45;transform:translateY(4px)}to{opacity:1;transform:none}}
-.app-overview{
-  background:linear-gradient(145deg,#fff,#f8fbfc);
-  border:1px solid var(--app-line);
-  border-radius:22px;
-  box-shadow:var(--app-shadow);
-  padding:18px;
-  margin:0 0 16px;
+.app-view{animation:appFade .16s ease-out}
+@keyframes appFade{from{opacity:.55;transform:translateY(3px)}to{opacity:1;transform:none}}
+.app-section-head{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;margin:6px 0 14px}
+.app-section-head h1,.app-section-head h2{margin:0;color:var(--app-ink);font-size:1.32rem;line-height:1.18}
+.app-section-head p{margin:4px 0 0;color:var(--app-muted);font-size:.8rem}
+.app-hero{
+  background:linear-gradient(145deg,#102033,#1d688f);color:#fff;border-radius:22px;padding:18px;
+  box-shadow:0 14px 34px rgba(16,32,51,.15);margin-bottom:12px
 }
-.app-kicker{font-size:.72rem;text-transform:uppercase;letter-spacing:.08em;color:var(--azure);font-weight:800}
-.app-overview h2{font-size:1.45rem;line-height:1.18;color:var(--navy);margin:4px 0 5px}
-.app-overview p{color:var(--mut);font-size:.9rem}
-.app-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:16px 0}
-.app-stat{background:var(--app-soft);border-radius:13px;padding:10px}
-.app-stat strong{display:block;color:var(--navy);font-size:1rem}
-.app-stat span{display:block;color:var(--mut);font-size:.69rem;margin-top:1px}
-.app-primary{
-  width:100%;border:0;border-radius:12px;background:var(--navy);color:#fff;
-  min-height:46px;padding:10px 14px;font:inherit;font-weight:700;cursor:pointer
+.app-hero .eyebrow{font-size:.7rem;text-transform:uppercase;letter-spacing:.075em;font-weight:800;color:#cfe4ef}
+.app-hero h1{font-size:1.45rem;line-height:1.18;margin:5px 0 5px;color:#fff}
+.app-hero p{font-size:.85rem;color:#d8e6ed;margin:0}
+.app-hero .big{font-size:2.05rem;font-weight:820;letter-spacing:-.035em;margin:7px 0 2px}
+.app-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin:10px 0 14px}
+.app-metric{background:#fff;border:1px solid var(--app-line);border-radius:15px;padding:12px}
+.app-metric strong{display:block;font-size:1.1rem;color:var(--app-ink);line-height:1.1}
+.app-metric span{display:block;font-size:.69rem;color:var(--app-muted);margin-top:4px}
+.app-card{
+  background:#fff;border:1px solid var(--app-line);border-radius:17px;padding:14px;margin:10px 0;
+  box-shadow:0 4px 16px rgba(15,27,45,.035)
 }
-.app-primary:active{transform:translateY(1px)}
-.app-progress{height:7px;background:#e4ebef;border-radius:999px;overflow:hidden;margin-top:9px}
-.app-progress>i{display:block;height:100%;background:var(--sage);border-radius:inherit;transition:width .2s ease}
-.app-progress-copy{display:flex;justify-content:space-between;gap:10px;margin-top:6px;font-size:.72rem;color:var(--mut)}
-.app-search{
-  position:relative;margin:0 0 14px;
+.app-card.critical{border-color:#e9c1b7;background:#fff9f7}
+.app-card.attention{border-color:#ead9b5;background:#fffcf5}
+.app-card.success{border-color:#cfe0d4;background:#f8fcf9}
+.app-card-title{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:7px}
+.app-card-title strong{font-size:.92rem;color:var(--app-ink)}
+.app-card-title span{font-size:.67rem;color:var(--app-muted)}
+.app-label{font-size:.67rem;text-transform:uppercase;letter-spacing:.07em;color:var(--app-blue);font-weight:850;margin-bottom:5px}
+.app-primary,.app-secondary,.app-chip,.app-action{
+  border:0;border-radius:12px;font:inherit;font-weight:760;cursor:pointer;text-decoration:none!important;
+  display:inline-flex;align-items:center;justify-content:center;gap:7px
 }
-.app-search input{
-  width:100%;height:44px;border:1px solid var(--app-line);border-radius:13px;background:#fff;
-  padding:0 42px 0 14px;font:inherit;font-size:.88rem;color:var(--tx);outline:none;
-  box-shadow:0 4px 14px rgba(15,27,45,.04)
+.app-primary{min-height:46px;padding:0 15px;background:var(--app-ink);color:#fff!important}
+.app-secondary{min-height:44px;padding:0 14px;background:var(--app-soft);color:var(--app-ink)!important}
+.app-action{min-height:42px;padding:0 13px;background:#fff;border:1px solid var(--app-line);color:var(--app-ink)!important;font-size:.8rem}
+.app-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:11px}
+.app-actions>*{flex:1 1 120px}
+.app-progress{height:8px;background:#e5ecef;border-radius:99px;overflow:hidden;margin:10px 0 5px}
+.app-progress i{display:block;height:100%;background:var(--app-green);border-radius:inherit}
+.app-progress-row{display:flex;justify-content:space-between;gap:10px;color:var(--app-muted);font-size:.7rem}
+.app-now{position:relative;padding-left:17px}
+.app-now:before{content:"";position:absolute;left:0;top:5px;bottom:5px;width:3px;border-radius:99px;background:var(--coral)}
+.app-now-time{font-size:1.55rem;font-weight:850;color:var(--app-ink);letter-spacing:-.03em}
+.app-now-text{font-size:.96rem;font-weight:700;line-height:1.35;margin-top:2px}
+.app-now-meta{font-size:.75rem;color:var(--app-muted);margin-top:5px}
+.app-next-list{display:grid;gap:0}
+.app-next-row{display:grid;grid-template-columns:58px minmax(0,1fr);gap:9px;padding:10px 0;border-top:1px solid #edf1f3}
+.app-next-row:first-child{border-top:0}
+.app-next-row .time{font-size:.76rem;color:var(--app-blue);font-weight:800}
+.app-next-row .text{font-size:.82rem;line-height:1.4}
+.app-cash-pill{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;background:#f6fbf7;border:1px solid #d7e6db;
+  border-radius:15px;padding:12px 14px;margin:10px 0
 }
-.app-search input:focus{border-color:var(--sky);box-shadow:0 0 0 3px rgba(77,168,212,.14)}
-.app-search button{
-  position:absolute;right:4px;top:4px;width:36px;height:36px;border:0;border-radius:10px;
-  background:transparent;color:var(--azure);font-size:1rem;cursor:pointer
+.app-cash-pill small{display:block;color:var(--app-muted);font-size:.68rem}
+.app-cash-pill strong{font-size:1.16rem;color:var(--app-green)}
+.app-quick{
+  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin:10px 0
 }
-.app-search-status{font-size:.72rem;color:var(--mut);min-height:18px;padding:3px 4px 0}
-.app-highlight{outline:3px solid rgba(77,168,212,.35)!important;outline-offset:3px;border-radius:10px}
+.app-quick button,.app-quick a{
+  min-height:58px;border:1px solid var(--app-line);border-radius:15px;background:#fff;color:var(--app-ink)!important;
+  text-decoration:none;font:inherit;font-size:.78rem;font-weight:760;padding:9px;display:flex;align-items:center;gap:9px
+}
+.app-quick b{font-size:1.1rem;width:25px;text-align:center}
 .app-daystrip{
-  position:sticky;top:8px;z-index:35;display:flex;gap:7px;overflow-x:auto;
-  scrollbar-width:none;padding:8px;margin:0 -2px 12px;background:rgba(243,246,248,.92);
-  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)
+  position:sticky;top:calc(58px + env(safe-area-inset-top));z-index:70;display:flex;gap:7px;overflow-x:auto;
+  scrollbar-width:none;margin:0 -12px 11px;padding:8px 12px;background:rgba(244,247,249,.95);
+  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid rgba(223,231,236,.72)
 }
 .app-daystrip::-webkit-scrollbar{display:none}
 .app-day{
-  flex:0 0 auto;border:1px solid var(--app-line);background:#fff;color:var(--navy);
-  border-radius:12px;padding:8px 11px;font:inherit;font-weight:750;font-size:.78rem;cursor:pointer
+  flex:0 0 auto;min-width:56px;border:1px solid var(--app-line);background:#fff;color:var(--app-ink);
+  border-radius:12px;padding:7px 9px;font:inherit;font-size:.76rem;font-weight:800;cursor:pointer
 }
-.app-day small{display:block;font-size:.61rem;color:var(--mut);font-weight:550;margin-top:1px}
-.app-day.active{background:var(--navy);color:#fff;border-color:var(--navy)}
-.app-day.active small{color:#d3e2ed}
+.app-day small{display:block;font-size:.65rem;color:var(--app-muted);font-weight:600;margin-top:2px}
+.app-day.active{background:var(--app-ink);border-color:var(--app-ink);color:#fff}
+.app-day.active small{color:#d7e2e9}
+.app-day.is-today{box-shadow:0 0 0 2px rgba(77,168,212,.25)}
 h2.sec{
-  font-size:1.08rem;margin:20px 0 10px;padding:0;border:0;color:var(--navy);
+  margin:22px 0 10px;padding:0;border:0;color:var(--app-ink);font-size:1.06rem;
   display:flex;align-items:center;gap:8px
 }
 h2.sec:before{content:"";width:4px;height:18px;border-radius:99px;background:var(--sky)}
 details{
-  border:1px solid var(--app-line);border-radius:16px;margin-bottom:10px;background:var(--app-panel);
+  background:#fff;border:1px solid var(--app-line);border-radius:17px;margin-bottom:10px;overflow:hidden;
   box-shadow:0 4px 16px rgba(15,27,45,.035)
 }
 details[open]{box-shadow:var(--app-shadow);border-color:#cfdbe2}
-summary{padding:14px 15px;min-height:64px}
+summary{min-height:64px;padding:13px 14px}
 summary::after{font-size:1rem}
-.body{padding:0 14px 15px}
-.box{border-left-width:3px;border-radius:13px}
-.trip{border-color:var(--app-line);border-radius:13px;background:#fff}
-.cash{border-radius:13px}
-.tl{padding:10px 0}
-table{background:#fff;border-radius:13px;overflow:hidden}
-.app-table-scroll{
-  overflow-x:auto;-webkit-overflow-scrolling:touch;border:1px solid var(--app-line);
-  border-radius:13px;background:#fff;margin:10px 0
+.body{padding:0 13px 14px}
+.tl{padding:10px 0;font-size:.84rem}
+.tl .h{flex-basis:58px}
+.box{border-radius:14px;border-left-width:3px;margin:10px 0;font-size:.84rem}
+.trip{
+  border:1px solid var(--app-line);border-radius:14px;padding:11px 12px;margin:9px 0;background:#fff;
+  box-shadow:none
 }
-.app-table-scroll table{margin:0;min-width:520px;border-radius:0}
-.app-table-scroll th:first-child,.app-table-scroll td:first-child{padding-left:12px}
+.trip .n{margin-bottom:2px}
+.trip-summary{display:flex;gap:7px;align-items:center;flex-wrap:wrap;margin-top:6px}
+.trip-summary .time{font-size:.73rem;font-weight:800;color:var(--app-blue)}
+.trip-summary .status{font-size:.65rem;border-radius:99px;background:var(--app-soft);padding:3px 7px;color:var(--app-muted);font-weight:800}
+.trip.compact .r{display:none}
+.trip.compact.open .r{display:flex}
+.trip-toggle{
+  margin-top:8px;border:0;background:transparent;color:var(--app-blue);font:inherit;font-size:.73rem;font-weight:800;padding:3px 0;cursor:pointer
+}
+.cash{border-radius:14px}
+table{background:#fff}
+.app-table-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;border:1px solid var(--app-line);border-radius:14px;background:#fff;margin:10px 0}
+.app-table-scroll table{margin:0;min-width:520px}
+.app-mobile-cards{display:grid;gap:8px;margin:10px 0}
+.app-mobile-row{background:#fff;border:1px solid var(--app-line);border-radius:13px;padding:11px}
+.app-mobile-row .rowline{display:flex;justify-content:space-between;gap:10px;font-size:.78rem;padding:3px 0}
+.app-mobile-row .rowline span:first-child{color:var(--app-muted)}
+.app-mobile-row .rowline span:last-child{text-align:right;color:var(--app-ink)}
+.app-mobile-row.total{background:var(--app-soft)}
+.app-taskbar,.app-filterbar{
+  display:flex;gap:7px;overflow-x:auto;scrollbar-width:none;margin:8px 0 12px
+}
+.app-taskbar::-webkit-scrollbar,.app-filterbar::-webkit-scrollbar{display:none}
+.app-chip{flex:0 0 auto;min-height:36px;padding:0 11px;background:#fff;border:1px solid var(--app-line);color:var(--app-ink);font-size:.72rem}
+.app-chip.active{background:var(--app-ink);border-color:var(--app-ink);color:#fff}
+.app-task-toggle{
+  width:100%;min-height:42px;margin-top:9px;border:1px solid var(--app-line);background:#fff;border-radius:11px;
+  color:var(--app-ink);font:inherit;font-size:.77rem;font-weight:800;cursor:pointer
+}
+.app-task-done{opacity:.62}
+.app-task-done .app-task-toggle{background:#f4f8f5;color:var(--app-green)}
 label.ck{border-color:#edf1f3}
 label.ck input{width:22px;height:22px}
-label.ck.is-done .n{text-decoration:line-through;color:var(--mut)}
-label.ck.is-done .y{opacity:.7}
-.btn{min-height:42px;display:inline-flex;align-items:center;justify-content:center}
-.top{display:none!important}
+label.ck.is-done .n{text-decoration:line-through;color:var(--app-muted)}
+label.ck.is-done .y{opacity:.62}
+.app-hide{display:none!important}
+.app-more-nav{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin:10px 0 16px}
+.app-more-nav button{
+  min-height:64px;border:1px solid var(--app-line);border-radius:15px;background:#fff;text-align:left;padding:11px;
+  color:var(--app-ink);font:inherit;font-size:.78rem;font-weight:800;cursor:pointer
+}
+.app-more-nav small{display:block;color:var(--app-muted);font-size:.65rem;font-weight:600;margin-top:2px}
+.app-emergency{background:#fff7f5;border:1px solid #edc9c1;border-radius:16px;padding:13px;margin:10px 0}
+.app-emergency strong{display:block;color:var(--app-red);font-size:.84rem}
 .app-bottom{
-  position:fixed;left:0;right:0;bottom:0;z-index:80;
-  display:grid;grid-template-columns:repeat(4,1fr);
-  padding:6px max(8px,env(safe-area-inset-left)) calc(6px + env(safe-area-inset-bottom));
-  background:rgba(15,27,45,.96);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
-  box-shadow:0 -6px 24px rgba(15,27,45,.18)
+  position:fixed;left:0;right:0;bottom:0;z-index:110;display:grid;grid-template-columns:repeat(4,1fr);
+  padding:6px 8px calc(6px + env(safe-area-inset-bottom));background:rgba(255,255,255,.97);
+  border-top:1px solid var(--app-line);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)
 }
 .app-navbtn{
-  border:0;background:transparent;color:#aebdcc;border-radius:11px;min-height:52px;
-  font:inherit;font-size:.67rem;font-weight:700;cursor:pointer;padding:5px 2px
+  border:0;background:transparent;color:#71808b;border-radius:12px;min-height:52px;font:inherit;font-size:.67rem;
+  font-weight:760;cursor:pointer;padding:4px 2px
 }
-.app-navbtn .ico{display:block;font-size:1.15rem;line-height:1.1;margin-bottom:3px}
-.app-navbtn.active{color:#fff;background:rgba(255,255,255,.1)}
-footer{margin-top:0;padding-bottom:calc(26px + env(safe-area-inset-bottom))}
-@media (min-width:900px){
-  body{padding-bottom:0}
-  header{padding-top:22px;padding-bottom:20px}
-  .app-shell{display:grid;grid-template-columns:236px minmax(0,1fr);gap:22px;padding-top:24px}
-  .app-sidebar{display:block;position:sticky;top:18px;align-self:start}
-  .app-sidecard{
-    background:#fff;border:1px solid var(--app-line);border-radius:18px;padding:10px;
-    box-shadow:0 10px 30px rgba(15,27,45,.06)
-  }
-  .app-sidebrand{padding:10px 10px 12px;font-weight:800;color:var(--navy);font-size:.92rem}
-  .app-sidebrand small{display:block;color:var(--mut);font-size:.7rem;font-weight:500;margin-top:2px}
-  .app-sidenav{display:grid;gap:5px}
-  .app-sidenav .app-navbtn{
-    color:var(--navy);display:flex;align-items:center;gap:10px;text-align:left;
-    padding:10px 11px;min-height:44px;font-size:.82rem
-  }
-  .app-sidenav .app-navbtn .ico{display:inline;margin:0;width:22px;text-align:center}
-  .app-sidenav .app-navbtn.active{background:var(--navy);color:#fff}
-  .app-bottom{display:none}
-  .app-main{max-width:920px}
-  .app-overview{padding:22px}
-  .app-primary{width:auto;min-width:220px}
-  .app-daystrip{top:12px}
-  .app-table-scroll table{min-width:0}
+.app-navbtn .ico{display:block;font-size:1.05rem;line-height:1;margin-bottom:4px}
+.app-navbtn.active{color:var(--app-ink);background:var(--app-soft)}
+.app-search-overlay{
+  position:fixed;inset:0;z-index:200;background:rgba(8,19,31,.44);padding:calc(12px + env(safe-area-inset-top)) 10px 10px;
+  display:none;align-items:flex-start;justify-content:center
 }
-@media (prefers-reduced-motion:reduce){
-  html{scroll-behavior:auto}.app-view{animation:none}.app-progress>i{transition:none}
+.app-search-overlay.open{display:flex}
+.app-search-panel{
+  width:min(680px,100%);max-height:calc(100vh - 22px - env(safe-area-inset-top));overflow:hidden;background:#fff;
+  border-radius:19px;box-shadow:0 24px 60px rgba(8,19,31,.28);display:flex;flex-direction:column
+}
+.app-search-head{display:flex;gap:8px;padding:10px;border-bottom:1px solid var(--app-line)}
+.app-search-head input{
+  flex:1;height:44px;border:1px solid var(--app-line);border-radius:12px;padding:0 12px;font:inherit;font-size:.88rem;outline:none
+}
+.app-search-head input:focus{border-color:var(--sky);box-shadow:0 0 0 3px rgba(77,168,212,.13)}
+.app-search-close{width:44px;border:0;border-radius:12px;background:var(--app-soft);font:inherit;font-size:1rem;cursor:pointer}
+.app-search-results{overflow:auto;padding:7px 10px 12px}
+.app-search-hint{padding:16px 4px;color:var(--app-muted);font-size:.8rem}
+.app-result{
+  width:100%;border:0;border-bottom:1px solid #edf1f3;background:#fff;text-align:left;padding:11px 5px;cursor:pointer
+}
+.app-result:last-child{border-bottom:0}
+.app-result strong{display:block;font-size:.82rem;color:var(--app-ink);margin-bottom:3px}
+.app-result span{display:block;font-size:.72rem;color:var(--app-muted);line-height:1.4}
+.app-result em{font-style:normal;color:var(--app-blue);font-size:.65rem;font-weight:800;text-transform:uppercase;letter-spacing:.04em}
+.app-highlight{outline:3px solid rgba(77,168,212,.32)!important;outline-offset:3px;border-radius:10px}
+@media(max-width:639px){
+  .app-table-scroll{display:none}
+  table:not(.app-keep-table){display:none}
+}
+@media(min-width:640px){
+  .app-mobile-cards{display:none}
+  .app-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .app-quick{grid-template-columns:repeat(4,minmax(0,1fr))}
+}
+@media(min-width:900px){
+  body{padding-bottom:30px}
+  .app-shell{padding:22px 18px 32px}
+  .app-bottom{left:50%;right:auto;transform:translateX(-50%);bottom:18px;width:520px;border:1px solid var(--app-line);border-radius:18px;padding:6px;box-shadow:var(--app-shadow)}
+  body>footer{padding-bottom:92px}
+  .app-topbar-inner{padding:0 18px}
+  .app-hero{padding:22px}
+}
+@media(prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}.app-view{animation:none}
 }
 </style></head><body>
 
@@ -667,203 +744,403 @@ if ('serviceWorker' in navigator && location.protocol === 'https:') {
 <footer>Circuit Cyclades · 9 → 18 septembre 2026<br>Santorin 3N · Naxos 3N · Paros 2N · Mykonos 1N<br>Document unique — généré depuis la même source que le PDF<br><span style="opacity:.6">version 06/09/2026 18:46 UTC</span></footer>
 <script id="app-ux-runtime">
 (function(){
-  'use strict';
-  function ready(fn){if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',fn);else fn()}
-  ready(function(){
-    var wrap=document.querySelector('.wrap');
-    if(!wrap || wrap.dataset.appified==='1') return;
-    wrap.dataset.appified='1';
-    wrap.classList.add('app-content');
+'use strict';
+function ready(fn){if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',fn);else fn()}
+ready(function(){
+  var wrap=document.querySelector('.wrap');
+  if(!wrap||wrap.dataset.appified==='v3')return;
+  wrap.dataset.appified='v3';
+  wrap.classList.add('app-content');
 
-    var existing=[].slice.call(wrap.children);
-    var views={
-      home:document.createElement('section'),
-      itinerary:document.createElement('section'),
-      prepare:document.createElement('section'),
-      info:document.createElement('section')
-    };
-    Object.keys(views).forEach(function(k){views[k].className='app-view';views[k].dataset.view=k});
-    var mode='home';
-    existing.forEach(function(node){
-      if(node.id==='valise') mode='prepare';
-      if((node.tagName==='H2' && (node.textContent||'').trim()==='Les 10 journées') || (node.matches && node.matches('details#j1'))) mode='itinerary';
-      if(node.id==='trsp') mode='info';
-      views[mode].appendChild(node);
-    });
+  function norm(s){return (s||'').replace(/\s+/g,' ').trim()}
+  function slug(s){
+    s=norm(s).toLocaleLowerCase('fr').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+    var h=5381;for(var i=0;i<s.length;i++)h=((h<<5)+h)^s.charCodeAt(i);
+    return s.slice(0,48)+'-'+(h>>>0).toString(36)
+  }
+  function safeStoreGet(k){try{return localStorage.getItem(k)}catch(e){return null}}
+  function safeStoreSet(k,v){try{localStorage.setItem(k,v)}catch(e){}}
+  function scrollTop(){window.scrollTo({top:0,behavior:'smooth'})}
+  function esc(s){return String(s||'').replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
 
-    var shell=document.createElement('div'); shell.className='app-shell';
-    var aside=document.createElement('aside'); aside.className='app-sidebar';
-    var main=document.createElement('main'); main.className='app-main';
-    wrap.parentNode.insertBefore(shell,wrap);
-    shell.appendChild(aside); shell.appendChild(main);
-    main.appendChild(wrap);
-
-    var navItems=[
-      ['home','⌂','Accueil'],
-      ['itinerary','◷','Itinéraire'],
-      ['prepare','✓','Préparer'],
-      ['info','☰','Infos']
-    ];
-    function navMarkup(cls){
-      var el=document.createElement('div'); el.className=cls;
-      navItems.forEach(function(item){
-        var b=document.createElement('button');
-        b.type='button'; b.className='app-navbtn'; b.dataset.target=item[0];
-        b.innerHTML='<span class="ico" aria-hidden="true">'+item[1]+'</span><span>'+item[2]+'</span>';
-        b.addEventListener('click',function(){switchView(item[0],true)});
-        el.appendChild(b);
-      });
-      return el;
-    }
-
-    var sideCard=document.createElement('div'); sideCard.className='app-sidecard';
-    var sideBrand=document.createElement('div'); sideBrand.className='app-sidebrand';
-    sideBrand.innerHTML='Cyclades <small>9 → 18 septembre 2026</small>';
-    sideCard.appendChild(sideBrand);
-    sideCard.appendChild(navMarkup('app-sidenav'));
-    aside.appendChild(sideCard);
-
-    var bottom=navMarkup('app-bottom');
-    document.body.appendChild(bottom);
-
-    var search=document.createElement('form'); search.className='app-search'; search.setAttribute('role','search');
-    search.innerHTML='<input type="search" aria-label="Rechercher dans le voyage" placeholder="Rechercher un lieu, horaire, contact…"><button type="submit" aria-label="Lancer la recherche">⌕</button><div class="app-search-status" aria-live="polite"></div>';
-    main.insertBefore(search,wrap);
-    var searchInput=search.querySelector('input'), searchStatus=search.querySelector('.app-search-status');
-
-    Object.keys(views).forEach(function(k){wrap.appendChild(views[k])});
-
-    var days=[].slice.call(views.itinerary.querySelectorAll('details[id^="j"]'));
-    var dayHeading=[].slice.call(views.itinerary.children).find(function(n){return n.tagName==='H2'});
-    var daystrip=document.createElement('div'); daystrip.className='app-daystrip'; daystrip.setAttribute('aria-label','Choisir un jour');
-    days.forEach(function(d,i){
-      var btn=document.createElement('button'); btn.type='button'; btn.className='app-day'; btn.dataset.day=d.id;
-      var title=d.querySelector('.sm-t'); var meta=d.querySelector('.sm-d');
-      btn.innerHTML='J'+(i+1)+'<small>'+((meta?meta.textContent:'').split('·')[0].trim()||'Jour '+(i+1))+'</small>';
-      btn.title=title?title.textContent:'J'+(i+1);
-      btn.addEventListener('click',function(){openDay(d.id,true)});
-      daystrip.appendChild(btn);
-    });
-    if(dayHeading) dayHeading.insertAdjacentElement('afterend',daystrip); else views.itinerary.insertBefore(daystrip,views.itinerary.firstChild);
-
-    function wrapTables(){
-      [].slice.call(wrap.querySelectorAll('table')).forEach(function(t){
-        if(t.parentElement && t.parentElement.classList.contains('app-table-scroll')) return;
-        var sc=document.createElement('div'); sc.className='app-table-scroll';
-        t.parentNode.insertBefore(sc,t); sc.appendChild(t);
-      });
-    }
-    wrapTables();
-
-    function checklistStats(){
-      var boxes=[].slice.call(document.querySelectorAll('label.ck input[type="checkbox"]'));
-      var done=boxes.filter(function(b){return b.checked}).length;
-      return {done:done,total:boxes.length,pct:boxes.length?Math.round(done/boxes.length*100):0};
-    }
-    var boxInputs=[].slice.call(document.querySelectorAll('label.ck input[type="checkbox"]'));
-    boxInputs.forEach(function(input,i){
-      var key='cyclades-check-'+i;
-      input.checked=localStorage.getItem(key)==='1';
-      input.closest('label.ck').classList.toggle('is-done',input.checked);
-      input.addEventListener('change',function(){
-        localStorage.setItem(key,input.checked?'1':'0');
-        input.closest('label.ck').classList.toggle('is-done',input.checked);
-        refreshProgress();
-      });
-    });
-
-    var overview=document.createElement('div'); overview.className='app-overview';
-    var islandCount=(document.querySelector('header .s')?.textContent||'').split('·').filter(Boolean).length||4;
-    var now=new Date(), start=new Date(2026,8,9), end=new Date(2026,8,18,23,59,59);
-    var msDay=86400000;
-    var status='', nextIndex=0;
-    if(now<start){
-      var diff=Math.ceil((start-new Date(now.getFullYear(),now.getMonth(),now.getDate()))/msDay);
-      status='Départ dans '+diff+' jour'+(diff>1?'s':'');
-      nextIndex=0;
-    }else if(now<=end){
-      nextIndex=Math.max(0,Math.min(9,Math.floor((new Date(now.getFullYear(),now.getMonth(),now.getDate())-start)/msDay)));
-      status='Jour '+(nextIndex+1)+' sur '+days.length;
-    }else{
-      nextIndex=days.length-1; status='Voyage terminé';
-    }
-    overview.innerHTML=
-      '<div class="app-kicker">'+status+'</div>'+
-      '<h2>Votre voyage, au bon endroit au bon moment.</h2>'+
-      '<p>Les mêmes informations, regroupées en vues rapides pour être consultées facilement sur place.</p>'+
-      '<div class="app-stats">'+
-        '<div class="app-stat"><strong>'+days.length+'</strong><span>jours</span></div>'+
-        '<div class="app-stat"><strong>'+islandCount+'</strong><span>îles</span></div>'+
-        '<div class="app-stat"><strong id="app-check-count">0/'+boxInputs.length+'</strong><span>éléments prêts</span></div>'+
-      '</div>'+
-      '<button type="button" class="app-primary">Ouvrir '+(now<start?'le premier jour':'le jour '+(nextIndex+1))+'</button>'+
-      '<div class="app-progress"><i style="width:0%"></i></div>'+
-      '<div class="app-progress-copy"><span>Préparation</span><span id="app-progress-label">0%</span></div>';
-    views.home.insertBefore(overview,views.home.firstChild);
-    overview.querySelector('.app-primary').addEventListener('click',function(){openDay('j'+(nextIndex+1),true)});
-    function refreshProgress(){
-      var s=checklistStats();
-      var count=document.getElementById('app-check-count'), lab=document.getElementById('app-progress-label'), bar=overview.querySelector('.app-progress i');
-      if(count) count.textContent=s.done+'/'+s.total;
-      if(lab) lab.textContent=s.pct+'%';
-      if(bar) bar.style.width=s.pct+'%';
-    }
-    refreshProgress();
-
-    function switchView(name,remember){
-      if(!views[name]) name='home';
-      Object.keys(views).forEach(function(k){views[k].hidden=k!==name});
-      [].slice.call(document.querySelectorAll('.app-navbtn')).forEach(function(b){
-        var active=b.dataset.target===name; b.classList.toggle('active',active); b.setAttribute('aria-current',active?'page':'false');
-      });
-      if(remember) localStorage.setItem('cyclades-view',name);
-      window.scrollTo({top:0,behavior:'smooth'});
-    }
-    function openDay(id,scroll){
-      var d=document.getElementById(id); if(!d) return;
-      switchView('itinerary',true);
-      days.forEach(function(x){x.open=x===d});
-      [].slice.call(daystrip.querySelectorAll('.app-day')).forEach(function(b){b.classList.toggle('active',b.dataset.day===id)});
-      try{history.replaceState(null,'','#'+id)}catch(e){}
-      if(scroll) setTimeout(function(){d.scrollIntoView({behavior:'smooth',block:'start'})},80);
-    }
-
-    days.forEach(function(d){
-      d.addEventListener('toggle',function(){
-        if(!d.open) return;
-        days.forEach(function(other){if(other!==d)other.open=false});
-        [].slice.call(daystrip.querySelectorAll('.app-day')).forEach(function(b){b.classList.toggle('active',b.dataset.day===d.id)});
-      });
-    });
-
-    function findViewFor(el){
-      var v=el.closest('.app-view'); return v?v.dataset.view:'home';
-    }
-    search.addEventListener('submit',function(e){
-      e.preventDefault();
-      var q=(searchInput.value||'').trim().toLocaleLowerCase('fr');
-      if(!q){searchStatus.textContent='';return}
-      var candidates=[].slice.call(wrap.querySelectorAll('summary,h2,h3,.box,.trip,.tl,td'));
-      var hit=candidates.find(function(el){return (el.textContent||'').toLocaleLowerCase('fr').includes(q)});
-      if(!hit){searchStatus.textContent='Aucun résultat pour « '+searchInput.value.trim()+' »';return}
-      var v=findViewFor(hit); switchView(v,true);
-      var det=hit.closest('details'); if(det){days.forEach(function(x){x.open=x===det})}
-      searchStatus.textContent='Résultat trouvé dans '+({home:'Accueil',itinerary:'Itinéraire',prepare:'Préparer',info:'Infos'}[v]||v);
-      hit.classList.add('app-highlight');
-      setTimeout(function(){hit.scrollIntoView({behavior:'smooth',block:'center'})},80);
-      setTimeout(function(){hit.classList.remove('app-highlight')},2200);
-    });
-
-    var hash=(location.hash||'').slice(1);
-    var initial='home';
-    if(/^j\d+$/.test(hash)){initial='itinerary';setTimeout(function(){openDay(hash,false)},0)}
-    else if(hash==='valise'||hash==='cash') initial='prepare';
-    else if(hash==='trsp'||hash==='bateau'||hash==='contacts') initial='info';
-    else initial=localStorage.getItem('cyclades-view')||'home';
-    switchView(initial,false);
-    if(initial==='itinerary' && !days.some(function(d){return d.open})){
-      var defaultDay=days[nextIndex]||days[0]; if(defaultDay) defaultDay.open=true;
-    }
+  var existing=[].slice.call(wrap.children);
+  var views={today:document.createElement('section'),trip:document.createElement('section'),prepare:document.createElement('section'),more:document.createElement('section')};
+  Object.keys(views).forEach(function(k){views[k].className='app-view';views[k].dataset.view=k});
+  var mode='prepare';
+  existing.forEach(function(node){
+    if((node.tagName==='H2'&&norm(node.textContent)==='Les 10 journées')||(node.matches&&node.matches('details#j1')))mode='trip';
+    if(node.id==='trsp')mode='more';
+    views[mode].appendChild(node);
   });
+  Object.keys(views).forEach(function(k){wrap.appendChild(views[k])});
+
+  var topbar=document.createElement('div');
+  topbar.className='app-topbar';
+  topbar.innerHTML='<div class="app-topbar-inner"><div class="app-top-title"><strong>Cyclades</strong><span>9 → 18 septembre 2026</span></div><button type="button" class="app-sync"><i class="app-dot"></i><span>En ligne</span></button><button type="button" class="app-iconbtn app-open-search" aria-label="Rechercher">⌕</button></div>';
+  document.body.insertBefore(topbar,document.body.firstChild);
+  var topStrong=topbar.querySelector('.app-top-title strong'),topSub=topbar.querySelector('.app-top-title span'),sync=topbar.querySelector('.app-sync');
+
+  function updateOnline(){
+    var online=navigator.onLine;
+    sync.classList.toggle('offline',!online);
+    sync.querySelector('span').textContent=online?'Hors ligne prêt':'Hors ligne';
+  }
+  window.addEventListener('online',updateOnline);window.addEventListener('offline',updateOnline);updateOnline();
+
+  var navItems=[
+    ['today','◎',"Aujourd'hui"],
+    ['trip','◷','Voyage'],
+    ['prepare','✓','Préparer'],
+    ['more','•••','Plus']
+  ];
+  var bottom=document.createElement('nav');bottom.className='app-bottom';bottom.setAttribute('aria-label','Navigation principale');
+  navItems.forEach(function(item){
+    var b=document.createElement('button');b.type='button';b.className='app-navbtn';b.dataset.target=item[0];
+    b.innerHTML='<span class="ico" aria-hidden="true">'+item[1]+'</span><span>'+item[2]+'</span>';
+    b.addEventListener('click',function(){switchView(item[0],true)});
+    bottom.appendChild(b);
+  });
+  document.body.appendChild(bottom);
+
+  var overlay=document.createElement('div');overlay.className='app-search-overlay';
+  overlay.innerHTML='<div class="app-search-panel" role="dialog" aria-modal="true" aria-label="Recherche"><div class="app-search-head"><input type="search" placeholder="Lieu, ferry, hôtel, horaire, contact…" aria-label="Rechercher"><button type="button" class="app-search-close" aria-label="Fermer">×</button></div><div class="app-search-results"><div class="app-search-hint">Essayez « ferry », « taxi », « volcan », « hôtel » ou « espèces ».</div></div></div>';
+  document.body.appendChild(overlay);
+  var searchInput=overlay.querySelector('input'),searchResults=overlay.querySelector('.app-search-results');
+  function openSearch(){overlay.classList.add('open');setTimeout(function(){searchInput.focus()},30)}
+  function closeSearch(){overlay.classList.remove('open');searchInput.value='';renderSearch('')}
+  topbar.querySelector('.app-open-search').addEventListener('click',openSearch);
+  overlay.querySelector('.app-search-close').addEventListener('click',closeSearch);
+  overlay.addEventListener('click',function(e){if(e.target===overlay)closeSearch()});
+  document.addEventListener('keydown',function(e){if(e.key==='Escape')closeSearch()});
+
+  var days=[].slice.call(views.trip.querySelectorAll('details[id^="j"]'));
+  var tripHeading=[].slice.call(views.trip.children).find(function(n){return n.tagName==='H2'});
+  var daystrip=document.createElement('div');daystrip.className='app-daystrip';daystrip.setAttribute('aria-label','Choisir un jour');
+  days.forEach(function(d,i){
+    var meta=d.querySelector('.sm-d'),txt=norm(meta?meta.textContent:'').split('·')[0];
+    var b=document.createElement('button');b.type='button';b.className='app-day';b.dataset.day=d.id;
+    b.innerHTML='J'+(i+1)+'<small>'+esc(txt||('Jour '+(i+1)))+'</small>';
+    b.addEventListener('click',function(){openDay(d.id,true)});
+    daystrip.appendChild(b);
+  });
+  if(tripHeading)tripHeading.insertAdjacentElement('afterend',daystrip);else views.trip.insertBefore(daystrip,views.trip.firstChild);
+
+  function parseTimeLabel(s){
+    var m=String(s||'').match(/(\d{1,2})h(\d{2})/i);
+    if(!m)return null;
+    return {h:+m[1],m:+m[2],minutes:(+m[1])*60+(+m[2])};
+  }
+  function travelDate(i){return new Date(2026,8,9+i,12,0,0)}
+  var todayLocal=new Date();
+  function dayIndexFor(date){
+    var d0=new Date(date.getFullYear(),date.getMonth(),date.getDate(),12,0,0);
+    var s=new Date(2026,8,9,12,0,0);
+    return Math.round((d0-s)/86400000);
+  }
+  function currentTravelIndex(){var i=dayIndexFor(new Date());return i>=0&&i<days.length?i:-1}
+  function isBeforeTrip(){return new Date()<new Date(2026,8,9,0,0,0)}
+  function isAfterTrip(){return new Date()>new Date(2026,8,18,23,59,59)}
+  var todayIdx=currentTravelIndex();
+
+  function wrapTables(){
+    [].slice.call(wrap.querySelectorAll('table')).forEach(function(t){
+      if(t.parentElement&&t.parentElement.classList.contains('app-table-scroll'))return;
+      var sc=document.createElement('div');sc.className='app-table-scroll';t.parentNode.insertBefore(sc,t);sc.appendChild(t);
+      var mobile=document.createElement('div');mobile.className='app-mobile-cards';
+      var heads=[].slice.call(t.querySelectorAll('thead th')).map(function(th){return norm(th.textContent)});
+      [].slice.call(t.querySelectorAll('tbody tr')).forEach(function(tr){
+        var cells=[].slice.call(tr.children);if(!cells.length)return;
+        var card=document.createElement('div');card.className='app-mobile-row'+(tr.classList.contains('tot')?' total':'');
+        cells.forEach(function(td,i){
+          var line=document.createElement('div');line.className='rowline';
+          var label=heads[i]||((i===0)?'':'Info');
+          line.innerHTML='<span>'+esc(label)+'</span><span>'+td.innerHTML+'</span>';
+          card.appendChild(line);
+        });
+        mobile.appendChild(card);
+      });
+      sc.insertAdjacentElement('afterend',mobile);
+    });
+  }
+  wrapTables();
+
+  function compactTrips(){
+    [].slice.call(views.trip.querySelectorAll('.trip')).forEach(function(tr){
+      if(tr.dataset.compact==='1')return;tr.dataset.compact='1';tr.classList.add('compact');
+      var rows=[].slice.call(tr.querySelectorAll('.r'));
+      var time='',status='';
+      rows.forEach(function(r){
+        var k=norm(r.querySelector('.k')?.textContent).toLocaleLowerCase('fr'),v=r.querySelector('.v');
+        if(k==='horaire'&&v)time=norm(v.textContent);
+        if(k==='paiement'&&v)status=norm(v.textContent);
+      });
+      var sum=document.createElement('div');sum.className='trip-summary';
+      sum.innerHTML=(time?'<span class="time">'+esc(time)+'</span>':'')+(status?'<span class="status">'+esc(status)+'</span>':'');
+      var n=tr.querySelector('.n');if(n)n.insertAdjacentElement('afterend',sum);
+      var btn=document.createElement('button');btn.type='button';btn.className='trip-toggle';btn.textContent='Voir les détails';
+      btn.addEventListener('click',function(){var open=tr.classList.toggle('open');btn.textContent=open?'Masquer les détails':'Voir les détails'});
+      tr.appendChild(btn);
+    });
+  }
+  compactTrips();
+
+  var oldChecks=[].slice.call(document.querySelectorAll('label.ck input[type="checkbox"]'));
+  oldChecks.forEach(function(input,i){
+    var label=input.closest('label.ck'),name=norm(label.querySelector('.n')?.textContent||label.textContent),key='cyclades-pack-'+slug(name);
+    if(safeStoreGet(key)===null&&safeStoreGet('cyclades-check-'+i)!==null)safeStoreSet(key,safeStoreGet('cyclades-check-'+i));
+    input.dataset.storeKey=key;input.checked=safeStoreGet(key)==='1';label.classList.toggle('is-done',input.checked);
+    input.addEventListener('change',function(){safeStoreSet(key,input.checked?'1':'0');label.classList.toggle('is-done',input.checked);refreshPrepare();renderToday()});
+  });
+
+  var prepHeading=views.prepare.querySelector('#faire');
+  var taskBoxes=[];
+  if(prepHeading){
+    var n=prepHeading.nextElementSibling;
+    while(n&&!(n.tagName==='H2'&&n.id==='valise')){if(n.classList&&n.classList.contains('box'))taskBoxes.push(n);n=n.nextElementSibling}
+  }
+  taskBoxes.forEach(function(box){
+    var title=norm(box.querySelector('b')?.textContent||box.textContent).replace(/^\d+\s*·\s*/,'');
+    var key='cyclades-task-'+slug(title);box.dataset.taskKey=key;
+    var done=safeStoreGet(key)==='1';box.classList.toggle('app-task-done',done);
+    var btn=document.createElement('button');btn.type='button';btn.className='app-task-toggle';
+    btn.textContent=done?'✓ Terminé':'Marquer comme terminé';
+    btn.addEventListener('click',function(){
+      var val=safeStoreGet(key)!=='1';safeStoreSet(key,val?'1':'0');syncTaskState(key,val);refreshPrepare();renderToday()
+    });
+    box.appendChild(btn);
+  });
+  function syncTaskState(key,done){
+    taskBoxes.filter(function(b){return b.dataset.taskKey===key}).forEach(function(box){
+      box.classList.toggle('app-task-done',done);var b=box.querySelector('.app-task-toggle');if(b)b.textContent=done?'✓ Terminé':'Marquer comme terminé'
+    })
+  }
+
+  var prepDashboard=document.createElement('div');prepDashboard.className='app-card';prepDashboard.id='app-prep-dashboard';
+  if(prepHeading)prepHeading.insertAdjacentElement('afterend',prepDashboard);
+  var taskFilters=document.createElement('div');taskFilters.className='app-taskbar';
+  taskFilters.innerHTML='<button type="button" class="app-chip active" data-taskfilter="todo">À faire</button><button type="button" class="app-chip" data-taskfilter="all">Tout</button><button type="button" class="app-chip" data-taskfilter="done">Terminé</button>';
+  prepDashboard.insertAdjacentElement('afterend',taskFilters);
+  function applyTaskFilter(f){
+    taskBoxes.forEach(function(box){var d=safeStoreGet(box.dataset.taskKey)==='1';box.classList.toggle('app-hide',(f==='todo'&&d)||(f==='done'&&!d))});
+  }
+  taskFilters.addEventListener('click',function(e){
+    var b=e.target.closest('[data-taskfilter]');if(!b)return;
+    [].slice.call(taskFilters.querySelectorAll('.app-chip')).forEach(function(x){x.classList.toggle('active',x===b)});
+    applyTaskFilter(b.dataset.taskfilter);
+  });
+  applyTaskFilter('todo');
+
+  var valise=views.prepare.querySelector('#valise');
+  if(valise){
+    var filters=document.createElement('div');filters.className='app-filterbar';
+    filters.innerHTML='<button type="button" class="app-chip active" data-packfilter="todo">À prendre</button><button type="button" class="app-chip" data-packfilter="all">Tout</button>';
+    valise.insertAdjacentElement('afterend',filters);
+    function applyPackFilter(f){
+      oldChecks.forEach(function(input){var label=input.closest('label.ck');label.classList.toggle('app-hide',f==='todo'&&input.checked)});
+      [].slice.call(views.prepare.querySelectorAll('.box')).forEach(function(box){
+        if(!box.querySelector('label.ck'))return;
+        var visible=[].slice.call(box.querySelectorAll('label.ck')).some(function(l){return !l.classList.contains('app-hide')});
+        box.classList.toggle('app-hide',f==='todo'&&!visible)
+      });
+    }
+    filters.addEventListener('click',function(e){
+      var b=e.target.closest('[data-packfilter]');if(!b)return;
+      [].slice.call(filters.querySelectorAll('.app-chip')).forEach(function(x){x.classList.toggle('active',x===b)});
+      applyPackFilter(b.dataset.packfilter);
+    });
+    applyPackFilter('todo');
+  }
+
+  function prepStats(){
+    var tasksDone=taskBoxes.filter(function(b){return safeStoreGet(b.dataset.taskKey)==='1'}).length;
+    var packDone=oldChecks.filter(function(i){return i.checked}).length;
+    return {tasksDone:tasksDone,tasksTotal:taskBoxes.length,packDone:packDone,packTotal:oldChecks.length,total:taskBoxes.length+oldChecks.length,done:tasksDone+packDone}
+  }
+  function refreshPrepare(){
+    var s=prepStats(),pct=s.total?Math.round(s.done/s.total*100):0;
+    prepDashboard.innerHTML='<div class="app-card-title"><strong>Progression de préparation</strong><span>'+pct+'%</span></div><div class="app-grid"><div class="app-metric"><strong>'+s.tasksDone+'/'+s.tasksTotal+'</strong><span>actions terminées</span></div><div class="app-metric"><strong>'+s.packDone+'/'+s.packTotal+'</strong><span>éléments préparés</span></div></div><div class="app-progress"><i style="width:'+pct+'%"></i></div><div class="app-progress-row"><span>'+Math.max(0,s.total-s.done)+' élément'+(s.total-s.done>1?'s':'')+' restant'+(s.total-s.done>1?'s':'')+'</span><span>'+pct+'%</span></div>'
+  }
+  refreshPrepare();
+
+  function dayTitle(d){return norm(d.querySelector('.sm-t')?.textContent||d.querySelector('summary')?.textContent)}
+  function dayMeta(d){return norm(d.querySelector('.sm-d')?.textContent)}
+  function timeline(d){
+    return [].slice.call(d.querySelectorAll('.tl')).map(function(row){
+      var h=norm(row.querySelector('.h')?.textContent),text=norm(row.querySelector('.h')?.nextElementSibling?.textContent||row.textContent.replace(h,''));
+      return {label:h,text:text,time:parseTimeLabel(h),row:row}
+    })
+  }
+  function dayCash(d){
+    var c=d.querySelector('.cash .v');return c?norm(c.textContent):''
+  }
+  function nightName(d){
+    var el=[].slice.call(d.querySelectorAll('.body>div')).reverse().find(function(x){return /^Nuit\s+\d+/i.test(norm(x.textContent))});
+    var m=el&&norm(el.textContent).match(/Nuit\s+\d+\s*[-–]\s*(.+)$/i);return m?norm(m[1]):''
+  }
+  var contacts=[].slice.call(views.more.querySelectorAll('tr')).map(function(tr){
+    var cells=tr.querySelectorAll('td');if(cells.length<2)return null;
+    var name=norm(cells[0].textContent),tel=cells[1].querySelector('a[href^="tel:"]');
+    return name&&tel?{name:name,href:tel.getAttribute('href')}:null
+  }).filter(Boolean);
+  function phoneFor(name){
+    var low=norm(name).toLocaleLowerCase('fr');
+    var c=contacts.find(function(x){var n=x.name.toLocaleLowerCase('fr');return low.indexOf(n)>=0||n.indexOf(low)>=0});return c?c.href:''
+  }
+  function mapsHref(q){return 'https://maps.apple.com/?q='+encodeURIComponent(q+' Grèce')}
+
+  function renderToday(){
+    views.today.innerHTML='';
+    var s=prepStats(),now=new Date(),idx=currentTravelIndex();
+    if(isBeforeTrip()){
+      var start=new Date(2026,8,9,0,0,0),diff=Math.ceil((start-new Date(now.getFullYear(),now.getMonth(),now.getDate()))/86400000);
+      var hero=document.createElement('div');hero.className='app-hero';
+      hero.innerHTML='<div class="eyebrow">Préparation</div><div class="big">J-'+diff+'</div><h1>Tout prêt pour les Cyclades ?</h1><p>Termine les actions importantes et ne garde à l’écran que ce qu’il reste à faire.</p>';
+      views.today.appendChild(hero);
+      var pct=s.total?Math.round(s.done/s.total*100):0;
+      var metrics=document.createElement('div');metrics.className='app-grid';
+      metrics.innerHTML='<div class="app-metric"><strong>'+Math.max(0,s.tasksTotal-s.tasksDone)+'</strong><span>actions restantes</span></div><div class="app-metric"><strong>'+Math.max(0,s.packTotal-s.packDone)+'</strong><span>à préparer</span></div><div class="app-metric"><strong>'+pct+'%</strong><span>préparation</span></div><div class="app-metric"><strong>J1</strong><span>9 septembre</span></div>';
+      views.today.appendChild(metrics);
+      var todo=taskBoxes.filter(function(b){return safeStoreGet(b.dataset.taskKey)!=='1'}).slice(0,3);
+      if(todo.length){
+        var h=document.createElement('div');h.className='app-section-head';h.innerHTML='<div><h2>Priorités</h2><p>Ce qui mérite ton attention maintenant.</p></div>';views.today.appendChild(h);
+        todo.forEach(function(box){
+          var c=document.createElement('div');c.className='app-card '+(box.classList.contains('bx-r')?'critical':'attention');
+          var title=norm(box.querySelector('b')?.textContent||'À faire').replace(/^\d+\s*·\s*/,'');
+          var body=box.cloneNode(true);var oldBtn=body.querySelector('.app-task-toggle');if(oldBtn)oldBtn.remove();
+          var firstB=body.querySelector('b');if(firstB)firstB.remove();
+          c.innerHTML='<div class="app-label">À faire</div><div class="app-card-title"><strong>'+esc(title)+'</strong></div><div style="font-size:.8rem;line-height:1.45">'+body.innerHTML+'</div>';
+          var actions=document.createElement('div');actions.className='app-actions';
+          var done=document.createElement('button');done.type='button';done.className='app-primary';done.textContent='✓ Terminer';
+          done.addEventListener('click',function(){safeStoreSet(box.dataset.taskKey,'1');syncTaskState(box.dataset.taskKey,true);refreshPrepare();renderToday()});
+          actions.appendChild(done);c.appendChild(actions);views.today.appendChild(c);
+        });
+      }else{
+        var ok=document.createElement('div');ok.className='app-card success';ok.innerHTML='<div class="app-label">Préparation</div><div class="app-card-title"><strong>Actions prioritaires terminées</strong></div><div style="font-size:.8rem;color:var(--app-muted)">Tu peux maintenant te concentrer sur la valise et les derniers contrôles.</div>';views.today.appendChild(ok)
+      }
+      var acts=document.createElement('div');acts.className='app-actions';
+      acts.innerHTML='<button type="button" class="app-primary" data-go="prepare">Continuer la préparation</button><button type="button" class="app-secondary" data-day="j1">Voir le premier jour</button>';
+      views.today.appendChild(acts);
+    }else if(idx>=0){
+      var d=days[idx],items=timeline(d),mins=now.getHours()*60+now.getMinutes();
+      var future=items.filter(function(x){return x.time&&x.time.minutes>=mins});
+      var next=future[0]||null,after=future.slice(1,4);
+      var hero2=document.createElement('div');hero2.className='app-hero';
+      hero2.innerHTML='<div class="eyebrow">Aujourd’hui · J'+(idx+1)+'</div><h1>'+esc(dayTitle(d))+'</h1><p>'+esc(dayMeta(d))+'</p>';
+      views.today.appendChild(hero2);
+      var nowCard=document.createElement('div');nowCard.className='app-card '+(next&&next.row.classList.contains('R')?'critical':'');
+      if(next){
+        var delta=next.time?next.time.minutes-mins:null,meta=delta===null?'Prochaine étape':(delta<=0?'Maintenant':delta<60?'Dans '+delta+' min':'À venir');
+        nowCard.innerHTML='<div class="app-label">'+esc(meta)+'</div><div class="app-now"><div class="app-now-time">'+esc(next.label)+'</div><div class="app-now-text">'+esc(next.text)+'</div></div>';
+      }else nowCard.innerHTML='<div class="app-label">Aujourd’hui</div><div class="app-now-text">Journée terminée.</div>';
+      var aa=document.createElement('div');aa.className='app-actions';
+      aa.innerHTML='<button type="button" class="app-primary" data-day="'+d.id+'">Voir la journée complète</button>';
+      nowCard.appendChild(aa);views.today.appendChild(nowCard);
+      if(after.length){
+        var nextCard=document.createElement('div');nextCard.className='app-card';
+        nextCard.innerHTML='<div class="app-card-title"><strong>Ensuite</strong><span>'+after.length+' étape'+(after.length>1?'s':'')+'</span></div><div class="app-next-list">'+after.map(function(x){return '<div class="app-next-row"><div class="time">'+esc(x.label)+'</div><div class="text">'+esc(x.text)+'</div></div>'}).join('')+'</div>';
+        views.today.appendChild(nextCard)
+      }
+      var cash=dayCash(d);if(cash){
+        var cp=document.createElement('div');cp.className='app-cash-pill';cp.innerHTML='<div><strong>Espèces aujourd’hui</strong><small>À prévoir avant de quitter l’hôtel</small></div><strong>'+esc(cash)+'</strong>';views.today.appendChild(cp)
+      }
+      var hotel=nightName(d),tel=phoneFor(hotel);
+      var q=document.createElement('div');q.className='app-quick';
+      q.innerHTML='<button type="button" data-day="'+d.id+'"><b>◷</b><span>Programme complet</span></button><button type="button" data-scroll-day="'+d.id+'"><b>⇄</b><span>Transports & billets</span></button>'+(hotel?'<a href="'+mapsHref(hotel)+'" target="_blank" rel="noopener"><b>⌖</b><span>'+esc(hotel)+'</span></a>':'')+(tel?'<a href="'+esc(tel)+'"><b>☎</b><span>Appeler l’hôtel</span></a>':'');
+      views.today.appendChild(q);
+      if(idx+1<days.length){
+        var tom=document.createElement('div');tom.className='app-card';tom.innerHTML='<div class="app-label">Demain · J'+(idx+2)+'</div><div class="app-card-title"><strong>'+esc(dayTitle(days[idx+1]))+'</strong></div><button type="button" class="app-secondary" data-day="'+days[idx+1].id+'">Prévisualiser demain</button>';views.today.appendChild(tom)
+      }
+    }else{
+      var hero3=document.createElement('div');hero3.className='app-hero';hero3.innerHTML='<div class="eyebrow">Voyage</div><h1>'+ (isAfterTrip()?'Les Cyclades, c’est terminé.':'Cyclades') +'</h1><p>Retrouve l’itinéraire complet, les contacts et les informations du séjour.</p>';views.today.appendChild(hero3);
+      var acts2=document.createElement('div');acts2.className='app-actions';acts2.innerHTML='<button type="button" class="app-primary" data-go="trip">Voir le voyage</button><button type="button" class="app-secondary" data-go="more">Contacts & infos</button>';views.today.appendChild(acts2)
+    }
+  }
+
+  views.today.addEventListener('click',function(e){
+    var day=e.target.closest('[data-day]');if(day){openDay(day.dataset.day,true);return}
+    var go=e.target.closest('[data-go]');if(go){switchView(go.dataset.go,true);return}
+    var sd=e.target.closest('[data-scroll-day]');if(sd){openDay(sd.dataset.scrollDay,true);setTimeout(function(){var d=document.getElementById(sd.dataset.scrollDay),h=[].slice.call(d.querySelectorAll('h3')).find(function(x){return /déplacements/i.test(x.textContent)});if(h)h.scrollIntoView({behavior:'smooth',block:'start'})},140)}
+  });
+
+  function enhanceMore(){
+    var head=document.createElement('div');head.className='app-section-head';head.innerHTML='<div><h1>Plus</h1><p>Références, contacts, transports et budget.</p></div>';
+    views.more.insertBefore(head,views.more.firstChild);
+    var nav=document.createElement('div');nav.className='app-more-nav';
+    [
+      ['trsp','Transports','Bus, billets, pièges'],
+      ['bateau','Bateau','Location sans permis'],
+      ['contacts','Contacts','Hôtels et urgences'],
+      ['budget','Budget','Coût du voyage']
+    ].forEach(function(item){
+      var target=item[0]==='budget'?[].slice.call(views.more.querySelectorAll('h2.sec')).find(function(h){return norm(h.textContent)==='Budget'}):document.getElementById(item[0]);
+      if(item[0]==='budget'&&target)target.id='budget';
+      if(!target)return;
+      var b=document.createElement('button');b.type='button';b.innerHTML=item[1]+'<small>'+item[2]+'</small>';b.addEventListener('click',function(){target.scrollIntoView({behavior:'smooth',block:'start'})});nav.appendChild(b)
+    });
+    views.more.insertBefore(nav,head.nextSibling);
+    var emergency=document.createElement('div');emergency.className='app-emergency';emergency.innerHTML='<strong>Urgence en Grèce</strong><div class="app-actions"><a class="app-primary" href="tel:112">Appeler le 112</a><button type="button" class="app-secondary app-open-search">Rechercher une information</button></div>';
+    views.more.insertBefore(emergency,nav.nextSibling);
+    emergency.querySelector('.app-open-search').addEventListener('click',openSearch);
+  }
+  enhanceMore();
+
+  function renderSearch(q){
+    q=norm(q).toLocaleLowerCase('fr');
+    if(!q){searchResults.innerHTML='<div class="app-search-hint">Essayez « ferry », « taxi », « volcan », « hôtel » ou « espèces ».</div>';return}
+    var candidates=[].slice.call(wrap.querySelectorAll('summary,h2,h3,.box,.trip,.tl,td,label.ck'));
+    var hits=candidates.filter(function(el){return norm(el.textContent).toLocaleLowerCase('fr').indexOf(q)>=0}).slice(0,30);
+    if(!hits.length){searchResults.innerHTML='<div class="app-search-hint">Aucun résultat pour « '+esc(searchInput.value)+' ».</div>';return}
+    searchResults.innerHTML='';
+    hits.forEach(function(el){
+      var d=el.closest('details[id^="j"]'),v=el.closest('.app-view'),where=d?('J'+(days.indexOf(d)+1)+' · '+dayTitle(d)):(v&&v.dataset.view==='prepare'?'Préparer':v&&v.dataset.view==='more'?'Plus':'Voyage');
+      var text=norm(el.textContent),preview=text.length>145?text.slice(0,142)+'…':text;
+      var b=document.createElement('button');b.type='button';b.className='app-result';b.innerHTML='<em>'+esc(where)+'</em><strong>'+esc(preview.split(/[.!?]/)[0].slice(0,90))+'</strong><span>'+esc(preview)+'</span>';
+      b.addEventListener('click',function(){
+        closeSearch();
+        if(d){openDay(d.id,false)}else switchView(v?v.dataset.view:'more',true);
+        setTimeout(function(){var parent=el.closest('.trip');if(parent){parent.classList.add('open');var bt=parent.querySelector('.trip-toggle');if(bt)bt.textContent='Masquer les détails'}el.classList.add('app-highlight');el.scrollIntoView({behavior:'smooth',block:'center'});setTimeout(function(){el.classList.remove('app-highlight')},1800)},80)
+      });
+      searchResults.appendChild(b)
+    })
+  }
+  searchInput.addEventListener('input',function(){renderSearch(searchInput.value)});
+
+  function switchView(name,remember){
+    if(!views[name])name='today';
+    Object.keys(views).forEach(function(k){views[k].hidden=k!==name});
+    [].slice.call(bottom.querySelectorAll('.app-navbtn')).forEach(function(b){var a=b.dataset.target===name;b.classList.toggle('active',a);b.setAttribute('aria-current',a?'page':'false')});
+    var titles={today:["Aujourd'hui",isBeforeTrip()?'Préparation du voyage':todayIdx>=0?('Jour '+(todayIdx+1)+' · '+dayTitle(days[todayIdx])):'Cyclades'],trip:['Voyage','J1 → J10'],prepare:['Préparer','Tâches, valise et espèces'],more:['Plus','Contacts, transports et budget']};
+    topStrong.textContent=titles[name][0];topSub.textContent=titles[name][1];
+    if(remember)safeStoreSet('cyclades-view-v3',name);
+    scrollTop()
+  }
+
+  function openDay(id,scroll){
+    var d=document.getElementById(id);if(!d)return;
+    switchView('trip',true);
+    days.forEach(function(x){x.open=x===d});
+    [].slice.call(daystrip.querySelectorAll('.app-day')).forEach(function(b){b.classList.toggle('active',b.dataset.day===id)});
+    try{history.replaceState(null,'','#'+id)}catch(e){}
+    if(scroll)setTimeout(function(){d.scrollIntoView({behavior:'smooth',block:'start'})},70)
+  }
+  days.forEach(function(d){
+    d.addEventListener('toggle',function(){
+      if(!d.open)return;days.forEach(function(o){if(o!==d)o.open=false});
+      [].slice.call(daystrip.querySelectorAll('.app-day')).forEach(function(b){b.classList.toggle('active',b.dataset.day===d.id)})
+    })
+  });
+
+  if(todayIdx>=0){
+    var tb=daystrip.querySelector('[data-day="j'+(todayIdx+1)+'"]');if(tb)tb.classList.add('is-today')
+  }
+  renderToday();
+
+  var old=safeStoreGet('cyclades-view'),map={home:'today',itinerary:'trip',prepare:'prepare',info:'more'};
+  var hash=(location.hash||'').slice(1),initial='today';
+  if(/^j\d+$/.test(hash)){initial='trip';setTimeout(function(){openDay(hash,false)},0)}
+  else initial=safeStoreGet('cyclades-view-v3')||map[old]||'today';
+  switchView(initial,false);
+  if(initial==='trip'&&!days.some(function(d){return d.open})){var d=days[todayIdx>=0?todayIdx:0];if(d)d.open=true}
+});
 })();
 </script></body></html>
