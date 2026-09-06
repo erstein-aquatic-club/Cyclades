@@ -739,13 +739,15 @@
           var originalIndex = day.timeline.indexOf(item);
           var isNext = isToday && originalIndex === nextIndex;
           var isPast = isToday && item.parsedTime && item.parsedTime.total < nowMinutes && !isNext;
+          var matchedPlace = placeForText(day.id, item.text);
           var cls = "timeline-row tone-" + item.tone + (isNext ? " next" : "") + (isPast ? " past" : "");
           return h("div", { key: item.time + "-" + originalIndex, className: cls },
             h("div", { className: "timeline-time" }, item.time || "—"),
             h("div", { className: "timeline-dot" }),
             h("div", { className: "timeline-body" },
               isNext ? h("span", { className: "next-badge" }, "Prochaine étape") : null,
-              h("div", { dangerouslySetInnerHTML: { __html: item.html || item.text } })
+              h("div", { className: "timeline-copy", dangerouslySetInnerHTML: { __html: item.html || item.text } }),
+              matchedPlace && props.onPlaceInfo ? h(InfoDot, { onClick: function () { props.onPlaceInfo(matchedPlace); } }) : null
             )
           );
         })
@@ -800,7 +802,7 @@
         h("a", { className: "action-btn", href: "https://maps.apple.com/?q=" + encodeURIComponent(day.hotel + " Grèce"), target: "_blank", rel: "noopener" }, h(SvgIcon, { name: "map", size: 18 }), " Itinéraire hôtel"),
         contact && contact.tel ? h("a", { className: "action-btn", href: contact.tel }, h(SvgIcon, { name: "phone", size: 18 }), " Appeler") : null
       ) : null,
-      h(Timeline, { day: day, isToday: props.isToday })
+      h(Timeline, { day: day, isToday: props.isToday, onPlaceInfo: props.onPlaceInfo })
     );
   }
 
@@ -846,6 +848,7 @@
     var state = useState({});
     var open = state[0];
     var setOpen = state[1];
+    var dayMeta = enrichmentDay(props.day.id);
     if (!props.day.transports.length) return null;
 
     return h("section", { className: "section-block" },
@@ -855,6 +858,14 @@
           var time = trip.rows.find(function (row) { return /horaire/i.test(row.key); });
           var pay = trip.rows.find(function (row) { return /paiement/i.test(row.key); });
           var expanded = !!open[index];
+          var resourceKeys = [];
+          dayMeta.legs.forEach(function (leg) {
+            if (leg.transportIndexes && leg.transportIndexes.indexOf(index) >= 0) {
+              (leg.resources || []).forEach(function (key) {
+                if (resourceKeys.indexOf(key) < 0) resourceKeys.push(key);
+              });
+            }
+          });
           return h("article", { key: trip.name + index, className: "transport-card tone-" + trip.tone },
             h("button", { type: "button", className: "transport-head", onClick: function () {
               var next = Object.assign({}, open);
@@ -868,7 +879,10 @@
                   pay ? h("span", null, pay.text) : null
                 )
               ),
-              h("span", { className: "chev" + (expanded ? " open" : "") }, h(SvgIcon, { name: "right", size: 18 }))
+              h("span", { className: "transport-head-tools" },
+                h("span", { className: "transport-info-mark" }, "i"),
+                h("span", { className: "chev" + (expanded ? " open" : "") }, h(SvgIcon, { name: "right", size: 18 }))
+              )
             ),
             expanded ? h("div", { className: "transport-details" },
               trip.rows.map(function (row) {
@@ -876,7 +890,13 @@
                   h("span", null, row.key),
                   h("div", { dangerouslySetInnerHTML: { __html: row.html } })
                 );
-              })
+              }),
+              resourceKeys.length ? h("div", { className: "resource-links transport-resources" },
+                resourceKeys.map(function (key) {
+                  var resource = resourceForKey(key);
+                  return resource ? h("a", { key: key, href: resource.url, target: "_blank", rel: "noopener" }, resource.label) : null;
+                })
+              ) : null
             ) : null
           );
         })
@@ -938,8 +958,10 @@
         onPrevious: function () { select(props.selectedDay - 1); },
         onNext: function () { select(props.selectedDay + 1); },
         isToday: props.selectedDay === todayIndex,
-        contacts: props.data.contacts
+        contacts: props.data.contacts,
+        onPlaceInfo: props.onPlaceInfo
       }),
+      h(DayMap, { day: selected, onPlaceInfo: props.onPlaceInfo }),
       h(UpcomingDays, { days: props.data.days, selected: props.selectedDay, onSelect: select }),
       h(TransportCards, { day: selected }),
       h(Notes, { day: selected }),
@@ -1189,6 +1211,9 @@
     var searchState = useState(false);
     var searchOpen = searchState[0];
     var setSearchOpen = searchState[1];
+    var placeState = useState(null);
+    var activePlace = placeState[0];
+    var setActivePlace = placeState[1];
     var status = tripStatus();
 
     useEffect(function () {
@@ -1231,11 +1256,12 @@
     return h(Fragment, null,
       h(Header, { view: view, setView: setView, onSearch: function () { setSearchOpen(true); }, status: status }),
       h("div", { className: "app-shell" },
-        view === "trip" ? h(TripView, { data: data, selectedDay: selectedDay, setSelectedDay: setSelectedDay, status: status }) : null,
+        view === "trip" ? h(TripView, { data: data, selectedDay: selectedDay, setSelectedDay: setSelectedDay, status: status, onPlaceInfo: setActivePlace }) : null,
         view === "prepare" ? h(PrepareView, { data: data }) : null,
         view === "info" ? h(InfoView, { data: data, onSearch: function () { setSearchOpen(true); } }) : null
       ),
-      h(SearchOverlay, { data: data, open: searchOpen, onClose: function () { setSearchOpen(false); }, onNavigate: navigate })
+      h(SearchOverlay, { data: data, open: searchOpen, onClose: function () { setSearchOpen(false); }, onNavigate: navigate }),
+      h(PlaceSheet, { info: activePlace, contacts: data.contacts, onClose: function () { setActivePlace(null); } })
     );
   }
 
