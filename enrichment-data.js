@@ -1,5 +1,188 @@
 /* Curated UI enrichment. Raw trip data remains in trip-data.html. */
 window.CYCLADES_ENRICHMENT = {
+  operational: {
+    global: [
+      {
+        id:"flight-checkin",
+        level:"info",
+        title:"Cartes d’embarquement Transavia",
+        text:"L’enregistrement en ligne ouvre 30 h avant le départ. Télécharge les cartes d’embarquement dans le téléphone et garde-les aussi hors ligne.",
+        actionLabel:"Transavia",
+        actionUrl:"https://www.transavia.com/aide/fr-fr/preparation-et-enregistrement/s-enregistrer"
+      },
+      {
+        id:"ferry-checkin",
+        level:"attention",
+        title:"Faire les check-ins SeaJets la veille",
+        text:"Le web check-in SeaJets est disponible de 48 h à 2 h avant le départ. Garde les trois boarding passes hors ligne et sois au quai au moins 30 min avant.",
+        actionLabel:"Check-in SeaJets",
+        actionUrl:"https://webcheckin.seajets.com/"
+      },
+      {
+        id:"bus-recheck",
+        level:"attention",
+        title:"Les horaires de bus restent dynamiques",
+        text:"À Santorin, Naxos et Paros, revalide les horaires la veille au soir. L’app signale ci-dessous les horaires du carnet qui divergent déjà des publications 2026.",
+        actionLabel:"Voir les liens transport",
+        target:"info"
+      }
+    ],
+    days: {
+      j1: [
+        {
+          id:"j1-orly-margin",
+          level:"attention",
+          title:"Orly : marge plus courte que la recommandation Transavia",
+          text:"Le carnet prévoit une arrivée à Orly vers 12h20 pour un vol à 14h15, soit 1h55. Transavia recommande actuellement 2h30 d’avance. Avec seulement des bagages cabine, ça peut passer, mais pour voyager sans stress vise plutôt Orly vers 11h45–11h50.",
+          action:"Quitter Gare de l’Est vers 11h00 plutôt que 11h30 si possible.",
+          sourceLabel:"Recommandation Transavia",
+          sourceUrl:"https://www.transavia.com/aide/fr-fr/preparation-et-enregistrement/aeroport/arriver-aeroport"
+        }
+      ],
+      j2: [
+        {
+          id:"j2-oia-bus",
+          level:"attention",
+          title:"Retour Oia → Fira : l’horaire du carnet a changé",
+          text:"Le 21h00 indiqué dans le carnet n’apparaît pas dans l’horaire 2026 publié. Les derniers départs affichés sont 20h20 puis 21h40.",
+          action:"Après Strogili, vise le bus de 21h40 et sois à l’arrêt 10–15 min avant.",
+          sourceLabel:"Horaires Santorin 2026",
+          sourceUrl:"https://santorinibus.com/"
+        }
+      ],
+      j3: [
+        {
+          id:"j3-akrotiri-price",
+          level:"attention",
+          title:"Akrotiri : le tarif brut de 12 € est ancien",
+          text:"Le Ministère grec affiche actuellement 20 € l’entrée adulte pour le site archéologique d’Akrotiri. Pour deux personnes, compte 16 € de plus que dans le carnet.",
+          action:"Prévois 40 € pour les deux entrées ou prends les billets officiels en ligne. Le téléphérique (10 € / trajet) et Nea Kameni (5 € / pers.) restent cohérents.",
+          sourceLabel:"Ministère grec de la Culture",
+          sourceUrl:"https://odysseus.culture.gr/h/3/eh355.jsp?obj_id=2410"
+        },
+        {
+          id:"j3-akrotiri-return",
+          level:"critical",
+          title:"Akrotiri → Fira : le retour publié est à 12h20, pas 12h00",
+          text:"Le carnet enchaîne Red Beach, un bus à 12h00, déjeuner, téléphérique et rendez-vous au vieux port à 13h45. L’horaire 2026 publié donne 12h20 pour Akrotiri → Fira : la marge devient faible.",
+          action:"À 11h45, commence le retour. Si le bus prend du retard ou si la file est forte, prends un taxi et sacrifie Red Beach ou le déjeuner plutôt que l’excursion réservée.",
+          sourceLabel:"Horaires Santorin 2026",
+          sourceUrl:"https://santorinibus.com/"
+        },
+        {
+          id:"j3-cable-car",
+          level:"attention",
+          title:"Le téléphérique est le deuxième point de friction",
+          text:"Le rendez-vous Santo Star est fixe à 13h45. Le trajet Fira → vieux port est court, mais une file au téléphérique suffit à consommer la marge.",
+          action:"Dès le retour à Fira, privilégie un déjeuner à emporter et descends sans traîner."
+        }
+      ],
+      j4: [
+        {
+          id:"j4-athinios-taxi",
+          level:"critical",
+          title:"Taxi vers Athinios : à considérer comme obligatoire",
+          text:"Le carnet prévoit un ferry à 09h50 et mentionne le bus comme repli. Or l’horaire 2026 publié pour Fira → port commence à 11h30 : ce plan B ne permet pas d’attraper le ferry.",
+          action:"Fais réserver le taxi/transfert la veille pour 08h10–08h15 et règle l’hôtel la veille si possible. Prévois un second numéro de taxi/transfert comme plan B.",
+          sourceLabel:"Fira → Port 2026",
+          sourceUrl:"https://santorinibus.com/"
+        }
+      ],
+      j5: [
+        {
+          id:"j5-naxos-bus",
+          level:"info",
+          title:"Journée plage : garde-la flexible",
+          text:"Les données publiques 2026 ne sont pas parfaitement cohérentes entre elles pour les départs du dimanche. Ce n’est pas bloquant : les plages sont très bien desservies, mais ne construis pas la journée autour d’un unique bus à 10h00.",
+          action:"Regarde l’horaire affiché au KTEL le matin et pars sur le prochain bus pour Agios Prokopios / Plaka.",
+          sourceLabel:"Bus Naxos",
+          sourceUrl:"https://greekislandbuses.com/routes/naxos/naxos-town-plaka"
+        }
+      ],
+      j6: [
+        {
+          id:"j6-mountain-bus",
+          level:"critical",
+          title:"Villages de montagne : le 09h00 du carnet ne colle pas aux horaires 2026",
+          text:"Les horaires 2026 publiés placent le départ de semaine Naxos → Halki / Filoti / Apeiranthos à 09h30, pas 09h00. Toute la journée dépend ensuite des correspondances entre villages.",
+          action:"La veille, reconstruis simplement la journée autour du 09h30 et du dernier retour disponible. Si tu veux zéro contrainte, taxi/voiture pour cette seule journée est l’option la plus fluide.",
+          sourceLabel:"Horaires Naxos 2026",
+          sourceUrl:"https://greekislandbuses.com/routes/naxos/naxos-town-apeiranthos"
+        },
+        {
+          id:"j6-zeus-choice",
+          level:"attention",
+          title:"Ne mélange pas Mont Zeus et les trois villages",
+          text:"Le carnet le dit déjà : la randonnée Zeus prend 3–4 h. Avec des bus contraints, tenter Zeus + Halki + Filoti + Apeiranthos transforme la journée en course.",
+          action:"Choisis dès le matin : villages tranquilles OU randonnée Zeus."
+        }
+      ],
+      j7: [
+        {
+          id:"j7-paros-timetable",
+          level:"attention",
+          title:"Paros : l’horaire officiel publié s’arrête actuellement au 10 septembre",
+          text:"Ta journée est le 15 septembre. Les 16h30 et 22h30 du carnet sont plausibles, mais ils doivent être revalidés dès que le nouveau tableau KTEL est publié.",
+          action:"Le 14 au soir, vérifie Parikia → Naoussa et surtout le dernier retour.",
+          sourceLabel:"KTEL Paros",
+          sourceUrl:"https://ktelparou.gr/en/bus-schedules.html"
+        },
+        {
+          id:"j7-sigi",
+          level:"attention",
+          title:"Sigi Ikthios doit être confirmé",
+          text:"Dans les données brutes, la réservation est encore indiquée comme demande envoyée, pas confirmée.",
+          action:"Si tu n’as pas reçu de confirmation, appelle avant le départ ou bascule vers Marmitta / Safran."
+        }
+      ],
+      j8: [
+        {
+          id:"j8-kolymbithres",
+          level:"info",
+          title:"Bateau-taxi : prévoir le plan B avant de partir",
+          text:"Le bateau-taxi est simple mais dépend du service du jour et de la mer. Le réseau KTEL dessert aussi Kolymbithres sur les grilles publiées.",
+          action:"À Naoussa, vérifie le bateau-taxi ; s’il ne tourne pas, prends le bus/taxi sans attendre.",
+          sourceLabel:"KTEL Paros",
+          sourceUrl:"https://ktelparou.gr/en/bus-schedules.html"
+        }
+      ],
+      j9: [
+        {
+          id:"j9-bus-verified",
+          level:"ok",
+          title:"Mykonos : cet enchaînement est cohérent",
+          text:"L’horaire 2026 publié confirme Agios Stefanos → Old Port à 11h10 et les retours Old Port → Agios Stefanos à l’heure pile jusqu’à 00h00.",
+          action:"Garde simplement en tête : Old Port pour l’hôtel, Fabrika pour l’aéroport.",
+          sourceLabel:"Mykonos Bus 2026",
+          sourceUrl:"https://mykonosbus.com/bus-timetables/"
+        },
+        {
+          id:"j9-dinner",
+          level:"attention",
+          title:"Dernière soirée : choix du dîner à verrouiller",
+          text:"Les données brutes indiquent toujours Kastro’s ou M-Eating sans réservation finalisée.",
+          action:"Décide avant le départ : réserver Kastro’s, ou garder cocktail + M-Eating comme formule plus souple."
+        }
+      ],
+      j10: [
+        {
+          id:"j10-tgv-buffer",
+          level:"critical",
+          title:"Retour : 50 min de marge nominale avant le TGV",
+          text:"Le plan suppose atterrissage 15h20, sortie 15h45, Gare de l’Est 16h35 et TGV 17h25. Une petite dérive du vol ou du métro peut consommer rapidement cette marge.",
+          action:"Dès qu’un retard de vol apparaît, ouvre SNCF Connect et regarde les trains suivants / conditions d’échange au lieu d’attendre d’être à Paris."
+        },
+        {
+          id:"j10-airport",
+          level:"ok",
+          title:"Mykonos JMK : marge confortable",
+          text:"Départ hôtel 09h30 et vol 12h45 donnent plus de 2h30 à l’aéroport, ce qui est cohérent avec la recommandation Transavia.",
+          sourceLabel:"Recommandation Transavia",
+          sourceUrl:"https://www.transavia.com/aide/fr-fr/preparation-et-enregistrement/aeroport/arriver-aeroport"
+        }
+      ]
+    }
+  },
   resources: {
     sncf: { label: "SNCF Connect", url: "https://www.sncf-connect.com/" },
     transavia: { label: "Transavia", url: "https://www.transavia.com/" },

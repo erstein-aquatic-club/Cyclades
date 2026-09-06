@@ -797,3 +797,98 @@ a{color:var(--cobalt)}
 @media(min-width:700px){
   .service-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
 }
+
+/* V5 audit — calm but visible operational friction */
+.day-num{display:flex!important;align-items:center;justify-content:space-between;gap:6px}
+.day-risk-dot{
+  width:7px;height:7px;border-radius:50%;display:inline-block;flex:none;
+  background:#c99b43;box-shadow:0 0 0 3px rgba(201,155,67,.12)
+}
+.day-pill.risk-critical .day-risk-dot{
+  background:var(--terracotta);box-shadow:0 0 0 3px rgba(200,107,74,.14)
+}
+.day-pill.active .day-risk-dot{background:#fff;box-shadow:0 0 0 3px rgba(255,255,255,.2)}
+.friction-panel{
+  border-radius:20px 20px 20px 7px;padding:13px;
+  background:linear-gradient(180deg,#fffdf9,#fff);
+  border:1px solid #ebe4d8;box-shadow:var(--shadow-soft)
+}
+.friction-panel.panel-critical{border-color:#edc9bd;background:linear-gradient(180deg,#fff7f3,#fff)}
+.friction-panel.panel-attention{border-color:#eadbb5;background:linear-gradient(180deg,#fffbf1,#fff)}
+.friction-panel.panel-ok{border-color:#d6e4d3;background:linear-gradient(180deg,#f7fbf6,#fff)}
+.friction-title{margin-bottom:9px}
+.friction-count{
+  border-radius:999px;background:var(--terracotta-soft);color:var(--terracotta);
+  padding:4px 8px;font-size:.56rem;font-weight:900;white-space:nowrap
+}
+.friction-list{display:grid;gap:8px}
+.friction-card{
+  display:grid;grid-template-columns:29px minmax(0,1fr);gap:9px;
+  background:#fff;border:1px solid var(--line);border-radius:15px 15px 15px 5px;padding:10px
+}
+.friction-card.level-critical{border-left:3px solid var(--terracotta)}
+.friction-card.level-attention{border-left:3px solid #c99b43}
+.friction-card.level-info{border-left:3px solid var(--sea)}
+.friction-card.level-ok{border-left:3px solid var(--olive);background:#fbfdf9}
+.friction-card.resolved{opacity:.56;background:#fafafa}
+.friction-icon{
+  width:25px;height:25px;border-radius:50%;display:grid;place-items:center;
+  background:var(--sea-soft);color:var(--aegean);font-size:.68rem;font-weight:900
+}
+.level-critical .friction-icon{background:var(--terracotta-soft);color:var(--terracotta)}
+.level-attention .friction-icon{background:#fff5d8;color:#8a6410}
+.level-ok .friction-icon{background:#eef6eb;color:var(--olive)}
+.friction-card-head{display:flex;align-items:flex-start;justify-content:space-between;gap:8px}
+.friction-card-head>strong{font-size:.72rem;line-height:1.28;color:var(--deep)}
+.severity-tag{
+  flex:none;border-radius:999px;background:var(--terracotta-soft);color:var(--terracotta);
+  padding:2px 6px;font-size:.5rem;font-weight:900;text-transform:uppercase;letter-spacing:.04em
+}
+.level-attention .severity-tag{background:#fff5d8;color:#8a6410}
+.severity-tag.verified{background:#eef6eb;color:var(--olive)}
+.friction-copy p{font-size:.66rem;color:#55686f;line-height:1.45;margin:5px 0}
+.friction-action{
+  margin-top:6px;background:var(--sand-soft);border-radius:10px;padding:7px 8px;
+  color:#394e56;font-size:.62rem;line-height:1.42
+}
+.friction-action strong{color:var(--terracotta)}
+.friction-tools{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-top:7px}
+.friction-tools a,.friction-tools button{
+  min-height:30px;border-radius:999px;padding:0 9px;font-size:.56rem;font-weight:850
+}
+.friction-tools a{
+  display:inline-flex;align-items:center;text-decoration:none!important;background:var(--sea-soft);color:var(--aegean)!important
+}
+.friction-tools button{
+  border:1px solid #d7e2df;background:#fff;color:var(--olive);cursor:pointer
+}
+.resolved-label{font-size:.56rem;color:var(--olive);font-weight:850}
+.show-resolved{
+  width:100%;border:0;background:transparent;color:var(--muted);padding:9px 0 0;
+  font-size:.58rem;font-weight:800;cursor:pointer
+}
+.travel-reflexes{margin:14px 0}
+.reflex-strip{
+  display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding:1px 1px 3px;
+  scroll-snap-type:x proximity
+}
+.reflex-strip::-webkit-scrollbar{display:none}
+.reflex-card{
+  flex:0 0 235px;display:grid;grid-template-columns:27px minmax(0,1fr);gap:8px;
+  border:1px solid var(--line);background:#fff;border-radius:16px 16px 16px 5px;
+  padding:10px;scroll-snap-align:start;box-shadow:var(--shadow-soft)
+}
+.reflex-card.level-attention{border-left:3px solid #c99b43}
+.reflex-mark{
+  width:24px;height:24px;border-radius:50%;background:var(--sea-soft);color:var(--aegean);
+  display:grid;place-items:center;font-size:.65rem;font-weight:900
+}
+.reflex-card.level-attention .reflex-mark{background:#fff5d8;color:#8a6410}
+.reflex-card strong{display:block;font-size:.68rem;color:var(--deep);line-height:1.25}
+.reflex-card p{font-size:.6rem;color:var(--muted);line-height:1.4;margin:4px 0}
+.reflex-card a{font-size:.57rem;font-weight:850;text-decoration:none}
+@media(min-width:700px){
+  .friction-list{grid-template-columns:1fr 1fr}
+  .friction-card.level-critical:first-child{grid-column:1/-1}
+  .reflex-card{flex-basis:270px}
+}
