@@ -766,3 +766,6 @@ a{color:var(--cobalt)}
 @media(prefers-reduced-motion:reduce){
   .place-sheet{animation:none}
 }
+
+.fact-with-info{position:relative;padding-right:39px}
+.fact-with-info .info-dot{top:8px;right:8px}
