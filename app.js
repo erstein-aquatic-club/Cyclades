@@ -1130,6 +1130,204 @@
     );
   }
 
+
+  function PackingPlanner(props) {
+    var packing = enrichmentRoot().packing || {};
+    var scopeState = useState("couple");
+    var scope = scopeState[0];
+    var setScope = scopeState[1];
+    var extrasState = useState("essential");
+    var extrasFilter = extrasState[0];
+    var setExtrasFilter = extrasState[1];
+    var forceState = useState(0);
+    var force = forceState[1];
+    var factor = scope === "couple" ? (packing.people || 2) : 1;
+    var wardrobe = packing.wardrobe || [];
+    var extras = packing.extras || [];
+    var allSmart = wardrobe.concat(extras);
+
+    function itemKey(item) { return "cyclades-smart-pack-" + item.id; }
+    function checked(item) { return storeGet(itemKey(item)) === "1"; }
+    function toggle(item) {
+      storeSet(itemKey(item), checked(item) ? "0" : "1");
+      force(function (n) { return n + 1; });
+    }
+    function displayCount(item) {
+      var base = Number(item.count || 1);
+      if (scope === "person") return base;
+      return item.per === "couple" ? base : base * factor;
+    }
+    function scopeLabel(item) {
+      if (scope === "person") return "par personne";
+      return item.per === "couple" ? "pour 2" : "au total";
+    }
+
+    var done = allSmart.filter(checked).length;
+    var total = allSmart.length;
+    var pct = total ? Math.round(done / total * 100) : 0;
+    var wardrobeGroups = [];
+    wardrobe.forEach(function (item) {
+      if (wardrobeGroups.indexOf(item.group) < 0) wardrobeGroups.push(item.group);
+    });
+
+    var visibleExtras = extras.filter(function (item) {
+      if (extrasFilter === "all") return true;
+      return item.priority === "high";
+    });
+
+    return h("section", { className: "packing-planner" },
+      h("section", { className: "packing-summary-card" },
+        h("div", { className: "packing-summary-copy" },
+          h("span", { className: "eyebrow" }, "Calculé depuis les 10 journées"),
+          h("h2", null, "Une valise pensée pour le programme réel"),
+          h("p", null, "La lessive de Naxos coupe le voyage en deux. On garde assez de marge pour J5/J6 sans transporter dix jours de vêtements.")
+        ),
+        h("div", { className: "packing-score" },
+          h("strong", null, done + "/" + total),
+          h("span", null, "catégories prêtes"),
+          h("div", { className: "packing-progress" }, h("i", { style: { width: pct + "%" } }))
+        )
+      ),
+      h("div", { className: "packing-facts" },
+        h("div", null, h("strong", null, packing.summary ? packing.summary.outfitMoments : 17), h("span", null, "moments de tenue")),
+        h("div", null, h("strong", null, packing.summary ? packing.summary.doubleOutfitDays.length : 7), h("span", null, "jours à 2 tenues")),
+        h("div", null, h("strong", null, "1"), h("span", null, "lessive pivot"))
+      ),
+      h("div", { className: "packing-scope-row" },
+        h("div", null,
+          h("span", { className: "kicker" }, "Quantités"),
+          h("strong", null, scope === "couple" ? "Pour vous deux" : "Par personne")
+        ),
+        h("div", { className: "mini-toggle packing-scope-toggle" },
+          h("button", { type: "button", className: scope === "person" ? "active" : "", onClick: function () { setScope("person"); } }, "Par personne"),
+          h("button", { type: "button", className: scope === "couple" ? "active" : "", onClick: function () { setScope("couple"); } }, "Pour 2")
+        )
+      ),
+
+      h("section", { className: "packing-zone" },
+        h("div", { className: "section-title" },
+          h("div", null, h("span", { className: "kicker" }, "Capsule vêtements"), h("h2", null, "Combien prendre"))
+        ),
+        h("div", { className: "wardrobe-groups" },
+          wardrobeGroups.map(function (group) {
+            var items = wardrobe.filter(function (item) { return item.group === group; });
+            return h("article", { className: "wardrobe-group", key: group },
+              h("h3", null, group),
+              items.map(function (item) {
+                var isChecked = checked(item);
+                return h("div", { className: "wardrobe-item" + (isChecked ? " done" : ""), key: item.id },
+                  h("button", { className: "smart-check", type: "button", onClick: function () { toggle(item); }, "aria-label": isChecked ? "Marquer non préparé" : "Marquer préparé" },
+                    isChecked ? h(SvgIcon, { name: "check", size: 16 }) : null
+                  ),
+                  h("div", { className: "wardrobe-count" },
+                    h("strong", null, displayCount(item)),
+                    h("span", null, item.unit || "pièce")
+                  ),
+                  h("div", { className: "wardrobe-copy" },
+                    h("strong", null, item.label),
+                    h("small", null, item.note),
+                    h("em", null, scopeLabel(item))
+                  )
+                );
+              })
+            );
+          })
+        )
+      ),
+
+      h("section", { className: "packing-zone outfit-zone" },
+        h("div", { className: "section-title" },
+          h("div", null, h("span", { className: "kicker" }, "Pourquoi ces quantités"), h("h2", null, "Tenues jour par jour"))
+        ),
+        h("div", { className: "outfit-strip" },
+          (packing.dayPlan || []).map(function (plan) {
+            return h("article", { className: "outfit-card" + (plan.outfits > 1 ? " double" : ""), key: plan.day },
+              h("div", { className: "outfit-card-top" },
+                h("span", { className: "outfit-day" }, "J" + plan.day),
+                h("span", { className: "outfit-count" }, plan.outfits + " tenue" + (plan.outfits > 1 ? "s" : ""))
+              ),
+              h("strong", null, plan.label),
+              h("div", { className: "wear-chips" },
+                (plan.wear || []).map(function (wear) { return h("span", { key: wear }, wear); })
+              ),
+              h("p", null, plan.note)
+            );
+          })
+        ),
+        h("article", { className: "laundry-plan" },
+          h("div", { className: "laundry-icon" }, "↻"),
+          h("div", null,
+            h("span", { className: "kicker" }, packing.laundry ? packing.laundry.day : "J5"),
+            h("strong", null, "La lessive est le pivot de la valise"),
+            h("p", null, packing.laundry ? packing.laundry.strategy : ""),
+            packing.laundry ? h("small", null, packing.laundry.place + " · dépôt : " + packing.laundry.deposit + " · retour : " + packing.laundry.return) : null
+          )
+        )
+      ),
+
+      h("section", { className: "packing-zone" },
+        h("div", { className: "section-title" },
+          h("div", null, h("span", { className: "kicker" }, "Au-delà des vêtements"), h("h2", null, "Ce qui rend le voyage plus simple")),
+          h("div", { className: "mini-toggle" },
+            h("button", { type: "button", className: extrasFilter === "essential" ? "active" : "", onClick: function () { setExtrasFilter("essential"); } }, "Essentiels"),
+            h("button", { type: "button", className: extrasFilter === "all" ? "active" : "", onClick: function () { setExtrasFilter("all"); } }, "Tout")
+          )
+        ),
+        h("div", { className: "smart-extra-grid" },
+          visibleExtras.map(function (item) {
+            var isChecked = checked(item);
+            return h("article", { key: item.id, className: "smart-extra" + (isChecked ? " done" : "") + " priority-" + item.priority },
+              h("button", { className: "smart-check", type: "button", onClick: function () { toggle(item); } },
+                isChecked ? h(SvgIcon, { name: "check", size: 16 }) : null
+              ),
+              h("div", { className: "extra-copy" },
+                h("span", { className: "extra-group" }, item.group),
+                h("strong", null, item.label),
+                h("small", null, item.note)
+              ),
+              h("div", { className: "extra-count" },
+                h("strong", null, displayCount(item)),
+                h("span", null, item.per === "couple" ? "pour 2" : scope === "couple" ? "total" : "chacun")
+              )
+            );
+          })
+        )
+      ),
+
+      h("div", { className: "packing-do-dont" },
+        h("article", { className: "buy-local-card" },
+          h("span", { className: "kicker" }, "Acheter sur place"),
+          h("h3", null, "Gagne de la place en cabine"),
+          h("ul", null, (packing.buyLocally || []).map(function (item) { return h("li", { key: item }, item); }))
+        ),
+        h("article", { className: "skip-card" },
+          h("span", { className: "kicker" }, "Ne pas prendre"),
+          h("h3", null, "Évite les “au cas où”"),
+          h("ul", null, (packing.skip || []).map(function (item) { return h("li", { key: item }, item); }))
+        )
+      ),
+
+      h("details", { className: "legacy-pack-details" },
+        h("summary", null, "Voir la checklist détaillée d’origine"),
+        h("p", { className: "legacy-explainer" }, "Elle reste disponible pour les points spécifiques du carnet et conserve les cases déjà cochées."),
+        h("div", { className: "pack-stack legacy-pack-stack" },
+          props.data.packCategories.map(function (category) {
+            return h("article", { className: "pack-card", key: category.id },
+              h("h3", null, category.title),
+              category.items.map(function (item) {
+                var isChecked = storeGet("cyclades-pack-" + item.id) === "1";
+                return h("label", { key: item.id, className: "pack-item" + (isChecked ? " done" : "") },
+                  h("input", { type: "checkbox", checked: isChecked, onChange: function () { props.toggleLegacy(item); } }),
+                  h("span", null, h("strong", null, item.name), item.note ? h("small", null, item.note) : null)
+                );
+              })
+            );
+          })
+        )
+      )
+    );
+  }
+
   function PrepareView(props) {
     var subState = useState("tasks");
     var subview = subState[0];
@@ -1142,8 +1340,10 @@
 
     var taskDone = props.data.tasks.filter(function (task) { return storeGet("cyclades-task-" + task.id) === "1"; }).length;
     var allPack = [].concat.apply([], props.data.packCategories.map(function (category) { return category.items; }));
-    var packDone = allPack.filter(function (item) { return storeGet("cyclades-pack-" + item.id) === "1"; }).length;
-    var total = props.data.tasks.length + allPack.length;
+    var smartPacking = enrichmentRoot().packing || {};
+    var smartPackItems = (smartPacking.wardrobe || []).concat(smartPacking.extras || []);
+    var packDone = smartPackItems.filter(function (item) { return storeGet("cyclades-smart-pack-" + item.id) === "1"; }).length;
+    var total = props.data.tasks.length + smartPackItems.length;
     var done = taskDone + packDone;
     var percent = total ? Math.round(done / total * 100) : 0;
 
@@ -1185,39 +1385,10 @@
         )
       );
     } else if (subview === "pack") {
-      body = h("section", { className: "section-block" },
-        h("div", { className: "section-title" },
-          h("div", null, h("span", { className: "kicker" }, packDone + "/" + allPack.length + " préparés"), h("h2", null, "Valise")),
-          h("div", { className: "mini-toggle" },
-            h("button", { type: "button", className: packFilter === "todo" ? "active" : "", onClick: function () { setPackFilter("todo"); } }, "À prendre"),
-            h("button", { type: "button", className: packFilter === "all" ? "active" : "", onClick: function () { setPackFilter("all"); } }, "Tout")
-          )
-        ),
-        h("div", { className: "pack-stack" },
-          props.data.packCategories.map(function (category) {
-            var visible = category.items.filter(function (item) {
-              return packFilter === "all" || storeGet("cyclades-pack-" + item.id) !== "1";
-            });
-            if (!visible.length && packFilter === "todo") return null;
-            return h("article", { className: "pack-card", key: category.id },
-              h("h3", null, category.title),
-              visible.map(function (item) {
-                var checked = storeGet("cyclades-pack-" + item.id) === "1";
-                return h("label", { key: item.id, className: "pack-item" + (checked ? " done" : "") },
-                  h("input", { type: "checkbox", checked: checked, onChange: function () { togglePack(item); } }),
-                  h("span", null, h("strong", null, item.name), item.note ? h("small", null, item.note) : null)
-                );
-              })
-            );
-          })
-        ),
-        props.data.prepNotes.length ? h("details", { className: "prep-notes" },
-          h("summary", null, "Conseils pratiques"),
-          props.data.prepNotes.map(function (note) {
-            return h("div", { key: note.title, className: "prep-note" }, h("strong", null, note.title), h(Rich, { html: note.html }));
-          })
-        ) : null
-      );
+      body = h(PackingPlanner, {
+        data: props.data,
+        toggleLegacy: togglePack
+      });
     } else {
       body = h("section", { className: "section-block" },
         h("div", { className: "section-title" }, h("div", null, h("span", { className: "kicker" }, "Budget pratique"), h("h2", null, "Espèces à prévoir"))),
@@ -1236,7 +1407,7 @@
       ),
       h("div", { className: "prepare-stats" },
         h("div", null, h("strong", null, props.data.tasks.length - taskDone), h("span", null, "actions restantes")),
-        h("div", null, h("strong", null, allPack.length - packDone), h("span", null, "à mettre dans la valise"))
+        h("div", null, h("strong", null, smartPackItems.length - packDone), h("span", null, "catégories valise restantes"))
       ),
       h(TravelReflexes),
       subnav,
