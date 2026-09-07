@@ -1328,6 +1328,93 @@
     );
   }
 
+
+  function SouvenirPlanner() {
+    var config = enrichmentRoot().souvenirs || { items: [] };
+    var forceState = useState(0);
+    var force = forceState[1];
+    var inputState = useState("");
+    var input = inputState[0];
+    var setInput = inputState[1];
+
+    var custom = [];
+    try { custom = JSON.parse(storeGet("cyclades-souvenir-custom") || "[]"); } catch (e) { custom = []; }
+    if (!Array.isArray(custom)) custom = [];
+
+    var items = (config.items || []).concat(custom);
+
+    function isDone(item) {
+      return storeGet("cyclades-souvenir-" + item.id) === "1";
+    }
+
+    function toggle(item) {
+      var key = "cyclades-souvenir-" + item.id;
+      storeSet(key, isDone(item) ? "0" : "1");
+      force(function (n) { return n + 1; });
+    }
+
+    function addItem(event) {
+      if (event) event.preventDefault();
+      var label = (input || "").trim();
+      if (!label) return;
+      var item = { id:"custom-" + Date.now(), label:label, note:"Ajout personnel" };
+      custom.push(item);
+      storeSet("cyclades-souvenir-custom", JSON.stringify(custom));
+      setInput("");
+      force(function (n) { return n + 1; });
+    }
+
+    function removeItem(item) {
+      if (String(item.id).indexOf("custom-") !== 0) return;
+      custom = custom.filter(function (entry) { return entry.id !== item.id; });
+      storeSet("cyclades-souvenir-custom", JSON.stringify(custom));
+      storeSet("cyclades-souvenir-" + item.id, "0");
+      force(function (n) { return n + 1; });
+    }
+
+    var doneCount = items.filter(isDone).length;
+
+    return h("section", { className:"section-block souvenir-planner" },
+      h("div", { className:"section-title" },
+        h("div", null,
+          h("span", { className:"kicker" }, doneCount + "/" + items.length + " trouvés"),
+          h("h2", null, config.title || "Souvenirs & cadeaux")
+        )
+      ),
+      h("p", { className:"souvenir-intro" }, config.intro || ""),
+      h("div", { className:"souvenir-list" },
+        items.map(function (item, index) {
+          var done = isDone(item);
+          return h("article", { key:item.id, className:"souvenir-item" + (done ? " done" : "") },
+            h("button", {
+              type:"button",
+              className:"souvenir-check",
+              onClick:function () { toggle(item); },
+              "aria-label": done ? "Marquer à chercher" : "Marquer trouvé"
+            }, done ? h(SvgIcon, { name:"check", size:16 }) : null),
+            h("div", { className:"souvenir-copy" },
+              h("div", { className:"souvenir-rank" }, index === 0 ? "Priorité" : "Idée"),
+              h("strong", null, item.label),
+              item.note ? h("small", null, item.note) : null
+            ),
+            String(item.id).indexOf("custom-") === 0 ? h("button", {
+              type:"button", className:"souvenir-remove", onClick:function () { removeItem(item); }, "aria-label":"Supprimer"
+            }, "×") : null
+          );
+        })
+      ),
+      h("form", { className:"souvenir-add", onSubmit:addItem },
+        h("input", {
+          type:"text",
+          value:input,
+          placeholder:"Ajouter une idée de souvenir…",
+          onInput:function (event) { setInput(event.target.value); }
+        }),
+        h("button", { type:"submit" }, "Ajouter")
+      )
+    );
+  }
+
   function PrepareView(props) {
     var subState = useState("tasks");
     var subview = subState[0];
@@ -1360,7 +1447,7 @@
     }
 
     var subnav = h("nav", { className: "subtabs" },
-      [["tasks", "Priorités"], ["pack", "Valise"], ["cash", "Espèces"]].map(function (tab) {
+      [["tasks", "Priorités"], ["pack", "Valise"], ["souvenirs", "Souvenirs"], ["cash", "Espèces"]].map(function (tab) {
         return h("button", { key: tab[0], type: "button", className: subview === tab[0] ? "active" : "", onClick: function () { setSubview(tab[0]); } }, tab[1]);
       })
     );
@@ -1389,6 +1476,8 @@
         data: props.data,
         toggleLegacy: togglePack
       });
+    } else if (subview === "souvenirs") {
+      body = h(SouvenirPlanner);
     } else {
       body = h("section", { className: "section-block" },
         h("div", { className: "section-title" }, h("div", null, h("span", { className: "kicker" }, "Budget pratique"), h("h2", null, "Espèces à prévoir"))),

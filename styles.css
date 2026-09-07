@@ -1036,3 +1036,45 @@ a{color:var(--cobalt)}
   .packing-do-dont{grid-template-columns:1fr 1fr}
   .outfit-card{flex-basis:225px}
 }
+
+
+/* V5.3 — souvenirs & gifts */
+.souvenir-planner{display:grid;gap:10px}
+.souvenir-intro{margin:-2px 0 2px;color:var(--muted);font-size:.64rem;line-height:1.45}
+.souvenir-list{display:grid;gap:8px}
+.souvenir-item{
+  display:grid;grid-template-columns:32px minmax(0,1fr) 28px;gap:9px;align-items:start;
+  border:1px solid var(--line);background:#fff;border-radius:16px 16px 16px 6px;padding:10px;
+  box-shadow:var(--shadow-soft)
+}
+.souvenir-item.done{opacity:.55}
+.souvenir-item.done .souvenir-copy>strong{text-decoration:line-through}
+.souvenir-check{
+  width:29px;height:29px;border-radius:50%;border:2px solid #cbd7d7;background:#fff;
+  display:grid;place-items:center;color:#fff;padding:0;cursor:pointer
+}
+.souvenir-item.done .souvenir-check{background:var(--olive);border-color:var(--olive)}
+.souvenir-copy{min-width:0}
+.souvenir-rank{
+  display:inline-block;margin-bottom:3px;border-radius:999px;background:var(--sand-soft);
+  color:var(--terracotta);font-size:.48rem;font-weight:900;text-transform:uppercase;
+  letter-spacing:.05em;padding:2px 6px
+}
+.souvenir-copy>strong{display:block;font-size:.73rem;color:var(--deep);line-height:1.25}
+.souvenir-copy small{display:block;margin-top:3px;font-size:.58rem;color:var(--muted);line-height:1.4}
+.souvenir-remove{
+  width:28px;height:28px;border:0;border-radius:50%;background:transparent;color:#9aa8aa;
+  font-size:1rem;cursor:pointer;padding:0
+}
+.souvenir-add{
+  display:grid;grid-template-columns:minmax(0,1fr) auto;gap:7px;margin-top:2px
+}
+.souvenir-add input{
+  min-height:42px;border:1px solid var(--line);border-radius:13px;background:#fff;
+  padding:0 11px;font:inherit;font-size:.65rem;color:var(--deep);outline:none
+}
+.souvenir-add input:focus{border-color:var(--sea);box-shadow:0 0 0 3px rgba(33,147,176,.10)}
+.souvenir-add button{
+  min-height:42px;border:0;border-radius:13px;background:var(--aegean);color:#fff;
+  padding:0 13px;font-size:.62rem;font-weight:850;cursor:pointer
+}

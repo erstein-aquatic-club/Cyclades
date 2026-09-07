@@ -1,5 +1,12 @@
 /* Curated UI enrichment. Raw trip data remains in trip-data.html. */
 window.CYCLADES_ENRICHMENT = {
+  souvenirs: {
+    title:"Souvenirs & cadeaux",
+    intro:"Une petite liste à garder en tête pendant les balades, sans transformer le voyage en chasse aux achats.",
+    items:[
+      { id:"vide-poches", label:"Vide-poches", note:"Chercher une pièce artisanale en céramique, idéalement sobre et typiquement cycladique." }
+    ]
+  },
   packing: {
     people: 2,
     laundry: {
