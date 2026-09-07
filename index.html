@@ -32,9 +32,19 @@
   <script defer src="./app.js"></script>
   <script>
     if ('serviceWorker' in navigator && location.protocol === 'https:') {
+      var cycladesSwRefreshing = false;
+
+      navigator.serviceWorker.addEventListener('controllerchange', function () {
+        if (cycladesSwRefreshing) return;
+        cycladesSwRefreshing = true;
+        location.reload();
+      });
+
       window.addEventListener('load', function () {
         navigator.serviceWorker.register('./sw.js', { updateViaCache: 'none' })
-          .then(function (registration) { return registration.update(); })
+          .then(function (registration) {
+            return registration.update();
+          })
           .catch(function () {});
       });
     }

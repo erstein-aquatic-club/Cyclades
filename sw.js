@@ -1,5 +1,5 @@
 // Cyclades React V4 — offline-first static application shell
-const CACHE = 'cyclades-live-v5-20260906';
+const CACHE = 'cyclades-smart-pack-v5-2-20260907';
 const LOCAL_ASSETS = [
   './',
   './index.html',
