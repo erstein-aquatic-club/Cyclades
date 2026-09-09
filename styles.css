@@ -1091,3 +1091,19 @@ a{color:var(--cobalt)}
 .bus-guide-row strong{font-size:.83rem;line-height:1.35;color:var(--navy)}
 .bus-guide-tip{margin-top:10px;padding:10px 11px;border-radius:11px;background:#fff;font-size:.8rem;line-height:1.4;font-weight:650;color:var(--navy)}
 @media (max-width:560px){.bus-guide-row{grid-template-columns:1fr;gap:3px}.bus-guide-head{align-items:flex-start}}
+
+
+/* Verified day plan */
+.confirmed-plan{margin-top:12px}
+.confirmed-plan-note{margin:0 0 12px;color:var(--mut);font-size:.82rem;line-height:1.45}
+.confirmed-plan-list{display:flex;flex-direction:column;gap:8px}
+.confirmed-plan-item{display:grid;grid-template-columns:66px 1fr;gap:12px;padding:11px 12px;border-radius:14px;background:#fff;border:1px solid rgba(11,109,168,.12)}
+.confirmed-plan-time{font-weight:800;color:var(--navy);font-size:.86rem}
+.confirmed-plan-copy strong{display:block;color:var(--navy);font-size:.86rem;margin-bottom:3px}
+.confirmed-plan-copy p{margin:0;color:var(--mut);font-size:.8rem;line-height:1.4}
+.confirmed-plan-item.tone-important{border-color:rgba(200,107,74,.35);background:rgba(200,107,74,.06)}
+.confirmed-plan-item.tone-booking{border-color:rgba(180,80,120,.28);background:rgba(180,80,120,.05)}
+.confirmed-plan-item.tone-transport{border-left:4px solid rgba(11,109,168,.55)}
+.confirmed-plan-item.tone-food{border-left:4px solid rgba(185,130,45,.55)}
+.confirmed-plan-item.tone-walk{border-left:4px solid rgba(74,130,85,.55)}
+@media(max-width:560px){.confirmed-plan-item{grid-template-columns:58px 1fr;gap:9px}}
