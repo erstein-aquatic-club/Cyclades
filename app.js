@@ -880,10 +880,37 @@
         h("a", { className: "action-btn", href: "https://maps.apple.com/?q=" + encodeURIComponent(day.hotel + " Grèce"), target: "_blank", rel: "noopener" }, h(SvgIcon, { name: "map", size: 18 }), " Itinéraire hôtel"),
         hotelPhone ? h("a", { className: "action-btn", href: hotelPhone }, h(SvgIcon, { name: "phone", size: 18 }), " Appeler") : null
       ) : null,
+      h(ConfirmedDayPlan, { day: day }),
       h(Timeline, { day: day, isToday: props.isToday, onPlaceInfo: props.onPlaceInfo })
     );
   }
 
+
+  function ConfirmedDayPlan(props) {
+    var dayMeta = enrichmentDay(props.day.id);
+    var plan = dayMeta.plan;
+    if (!plan || !plan.items || !plan.items.length) return null;
+    return h("section", { className: "section-block confirmed-plan" },
+      h("div", { className: "section-title" },
+        h("div", null,
+          h("span", { className: "kicker" }, "Planning vérifié"),
+          h("h2", null, plan.title || "Plan du jour")
+        )
+      ),
+      plan.note ? h("p", { className: "confirmed-plan-note" }, plan.note) : null,
+      h("div", { className: "confirmed-plan-list" },
+        plan.items.map(function (item, index) {
+          return h("article", { className: "confirmed-plan-item tone-" + (item.tone || "default"), key: item.time + item.title + index },
+            h("div", { className: "confirmed-plan-time" }, item.time),
+            h("div", { className: "confirmed-plan-copy" },
+              h("strong", null, item.title),
+              h("p", null, item.detail)
+            )
+          );
+        })
+      )
+    );
+  }
 
   function FrictionPanel(props) {
     var tickState = useState(0);
