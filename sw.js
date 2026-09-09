@@ -1,5 +1,5 @@
 // Cyclades React V4 — offline-first static application shell
-const CACHE = 'cyclades-smart-pack-v5-2-20260907';
+const CACHE = 'cyclades-akrotiri-j2-v6-20260909';
 const LOCAL_ASSETS = [
   './',
   './index.html',
