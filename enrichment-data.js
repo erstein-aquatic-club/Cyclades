@@ -124,40 +124,37 @@ window.CYCLADES_ENRICHMENT = {
       ],
       j2: [
         {
+          id:"j2-akrotiri-opening",
+          level:"info",
+          title:"Akrotiri déplacé au matin du J2",
+          text:"Le jeudi 10, Akrotiri ouvre à 08h30. La nouvelle organisation fait Akrotiri à l’ouverture puis Imerovigli → Oia à pied.",
+          action:"Demande idéalement un taxi à 08h00 depuis Fira et une reprise vers 10h10 pour Imerovigli.",
+          sourceLabel:"Horaires officiels Akrotiri",
+          sourceUrl:"https://cyclades.culture.gov.gr/location/archaiologikos-choros-akrotiriou-thiras/"
+        },
+        {
           id:"j2-oia-bus",
           level:"attention",
-          title:"Retour Oia → Fira : l’horaire du carnet a changé",
-          text:"Le 21h00 indiqué dans le carnet n’apparaît pas dans l’horaire 2026 publié. Les derniers départs affichés sont 20h20 puis 21h40.",
-          action:"Après Strogili, vise le bus de 21h40 et sois à l’arrêt 10–15 min avant.",
+          title:"Retour Oia → Fira : vise 21h40",
+          text:"Le dernier départ actuellement publié est 21h40.",
+          action:"Sois à l’arrêt 10–15 min avant.",
           sourceLabel:"Horaires Santorin 2026",
           sourceUrl:"https://santorinibus.com/"
         }
       ],
       j3: [
         {
-          id:"j3-akrotiri-price",
-          level:"attention",
-          title:"Akrotiri : le tarif brut de 12 € est ancien",
-          text:"Le Ministère grec affiche actuellement 20 € l’entrée adulte pour le site archéologique d’Akrotiri. Pour deux personnes, compte 16 € de plus que dans le carnet.",
-          action:"Prévois 40 € pour les deux entrées ou prends les billets officiels en ligne. Le téléphérique (10 € / trajet) et Nea Kameni (5 € / pers.) restent cohérents.",
-          sourceLabel:"Ministère grec de la Culture",
-          sourceUrl:"https://odysseus.culture.gr/h/3/eh355.jsp?obj_id=2410"
-        },
-        {
-          id:"j3-akrotiri-return",
-          level:"critical",
-          title:"Akrotiri → Fira : le retour publié est à 12h20, pas 12h00",
-          text:"Le carnet enchaîne Red Beach, un bus à 12h00, déjeuner, téléphérique et rendez-vous au vieux port à 13h45. L’horaire 2026 publié donne 12h20 pour Akrotiri → Fira : la marge devient faible.",
-          action:"À 11h45, commence le retour. Si le bus prend du retard ou si la file est forte, prends un taxi et sacrifie Red Beach ou le déjeuner plutôt que l’excursion réservée.",
-          sourceLabel:"Horaires Santorin 2026",
-          sourceUrl:"https://santorinibus.com/"
+          id:"j3-relaxed",
+          level:"ok",
+          title:"Le point critique Akrotiri est supprimé du J3",
+          text:"La matinée est désormais libre à Fira et vous pouvez descendre au vieux port avec une vraie marge avant le rendez-vous de 13h45."
         },
         {
           id:"j3-cable-car",
           level:"attention",
-          title:"Le téléphérique est le deuxième point de friction",
-          text:"Le rendez-vous Santo Star est fixe à 13h45. Le trajet Fira → vieux port est court, mais une file au téléphérique suffit à consommer la marge.",
-          action:"Dès le retour à Fira, privilégie un déjeuner à emporter et descends sans traîner."
+          title:"Seule vigilance : la file du téléphérique",
+          text:"Avec un départ vers 12h50, la marge est désormais confortable.",
+          action:"Déjeunez tôt et descendez sans attendre si une grosse file se forme."
         }
       ],
       j4: [
@@ -520,31 +517,29 @@ window.CYCLADES_ENRICHMENT = {
     },
     j2: {
       points: [
-        { id:"A", place:"fira" }, { id:"B", place:"firostefani" }, { id:"C", place:"imerovigli" },
+        { id:"A", place:"fira" }, { id:"B", place:"akrotiri" }, { id:"C", place:"imerovigli" },
         { id:"D", place:"oia" }, { id:"E", place:"ammoudi" }
       ],
       legs: [
-        { from:"A", to:"D", via:["B","C"], title:"Sentier de la caldeira", transportIndexes:[0] },
+        { from:"A", to:"B", title:"Fira → Akrotiri", transportIndexes:[0] },
+        { from:"B", to:"C", title:"Akrotiri → Imerovigli", transportIndexes:[1] },
+        { from:"C", to:"D", title:"Sentier de la caldeira", transportIndexes:[2] },
         { from:"D", to:"E", title:"Oia → Ammoudi", options:[{label:"À pied",detail:"~300 marches"},{label:"Taxi",detail:"option confortable"}] },
-        { from:"E", to:"D", title:"Retour Ammoudi → Oia", transportIndexes:[1] },
-        { from:"D", to:"A", title:"Oia → Fira", transportIndexes:[2], resources:["santoriniBus"] }
+        { from:"E", to:"D", title:"Retour Ammoudi → Oia", transportIndexes:[3] },
+        { from:"D", to:"A", title:"Oia → Fira", transportIndexes:[4], resources:["santoriniBus"] }
       ],
-      featured:["oia","fira"]
+      featured:["akrotiri","oia"]
     },
     j3: {
       points: [
-        { id:"A", place:"fira" }, { id:"B", place:"akrotiri" }, { id:"C", place:"redBeach" },
-        { id:"D", place:"firaOldPort" }, { id:"E", place:"neaKameni" }, { id:"F", place:"paleaKameni" }
+        { id:"A", place:"fira" }, { id:"B", place:"firaOldPort" }, { id:"C", place:"neaKameni" }, { id:"D", place:"paleaKameni" }
       ],
       legs: [
-        { from:"A", to:"B", title:"Fira → Akrotiri", transportIndexes:[0], resources:["santoriniBus"] },
-        { from:"B", to:"C", title:"Akrotiri → Red Beach", options:[{label:"À pied",detail:"~15 min"}] },
-        { from:"B", to:"A", title:"Akrotiri → Fira", transportIndexes:[1], resources:["santoriniBus"] },
-        { from:"A", to:"D", title:"Fira → vieux port", transportIndexes:[2] },
-        { from:"D", to:"D", via:["E","F"], title:"Volcan & sources chaudes", transportIndexes:[3,4] },
-        { from:"D", to:"A", title:"Vieux port → Fira", transportIndexes:[5] }
+        { from:"A", to:"B", title:"Fira → vieux port", transportIndexes:[0] },
+        { from:"B", to:"B", via:["C","D"], title:"Volcan & sources chaudes", transportIndexes:[1,2] },
+        { from:"B", to:"A", title:"Vieux port → Fira", transportIndexes:[3] }
       ],
-      featured:["akrotiri","neaKameni"]
+      featured:["neaKameni","paleaKameni"]
     },
     j4: {
       points: [
