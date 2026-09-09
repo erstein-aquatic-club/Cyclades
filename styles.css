@@ -1078,3 +1078,16 @@ a{color:var(--cobalt)}
   min-height:42px;border:0;border-radius:13px;background:var(--aegean);color:#fff;
   padding:0 13px;font-size:.62rem;font-weight:850;cursor:pointer
 }
+
+
+/* Bus guides */
+.bus-guide{margin:14px 0;padding:14px;border-radius:16px;background:rgba(11,109,168,.07);border:1px solid rgba(11,109,168,.18)}
+.bus-guide-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px}
+.bus-guide-kicker{font-size:.72rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--navy)}
+.bus-guide-map{display:inline-flex;align-items:center;gap:5px;font-size:.76rem;font-weight:700;text-decoration:none;color:var(--navy);white-space:nowrap}
+.bus-guide-row{display:grid;grid-template-columns:112px 1fr;gap:10px;padding:8px 0;border-top:1px solid rgba(11,109,168,.12)}
+.bus-guide-row:first-of-type{border-top:0}
+.bus-guide-row span{font-size:.75rem;color:var(--mut);font-weight:700}
+.bus-guide-row strong{font-size:.83rem;line-height:1.35;color:var(--navy)}
+.bus-guide-tip{margin-top:10px;padding:10px 11px;border-radius:11px;background:#fff;font-size:.8rem;line-height:1.4;font-weight:650;color:var(--navy)}
+@media (max-width:560px){.bus-guide-row{grid-template-columns:1fr;gap:3px}.bus-guide-head{align-items:flex-start}}
