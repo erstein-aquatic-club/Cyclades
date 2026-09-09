@@ -631,6 +631,21 @@
             target: "_blank", rel: "noopener", className: "mini-map-link"
           }, h(SvgIcon, { name: "map", size: 16 }), " Plans")
         ),
+        activeLeg.guide ? h("div", { className: "bus-guide" },
+          h("div", { className: "bus-guide-head" },
+            h("span", { className: "bus-guide-kicker" }, activeLeg.guide.label || "Mode d’emploi"),
+            activeLeg.guide.mapUrl ? h("a", { href: activeLeg.guide.mapUrl, target: "_blank", rel: "noopener", className: "bus-guide-map" },
+              h(SvgIcon, { name: "map", size: 15 }), " Ouvrir l’arrêt"
+            ) : null
+          ),
+          activeLeg.guide.board ? h("div", { className: "bus-guide-row" }, h("span", null, "📍 Où monter"), h("strong", null, activeLeg.guide.board)) : null,
+          activeLeg.guide.line ? h("div", { className: "bus-guide-row" }, h("span", null, "🚌 Ligne"), h("strong", null, activeLeg.guide.line)) : null,
+          activeLeg.guide.direction ? h("div", { className: "bus-guide-row" }, h("span", null, "➡️ Direction"), h("strong", null, activeLeg.guide.direction)) : null,
+          activeLeg.guide.timing ? h("div", { className: "bus-guide-row" }, h("span", null, "🕐 Horaire"), h("strong", null, activeLeg.guide.timing)) : null,
+          activeLeg.guide.fare ? h("div", { className: "bus-guide-row" }, h("span", null, "💶 Billet"), h("strong", null, activeLeg.guide.fare)) : null,
+          activeLeg.guide.alight ? h("div", { className: "bus-guide-row" }, h("span", null, "🚏 Où descendre"), h("strong", null, activeLeg.guide.alight)) : null,
+          activeLeg.guide.action ? h("div", { className: "bus-guide-tip" }, activeLeg.guide.action) : null
+        ) : null,
         activeLeg.transportIndexes ? activeLeg.transportIndexes.map(function (transportIndex) {
           var trip = props.day.transports[transportIndex];
           if (!trip) return null;
