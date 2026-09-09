@@ -127,8 +127,8 @@ window.CYCLADES_ENRICHMENT = {
           id:"j2-akrotiri-opening",
           level:"info",
           title:"Akrotiri déplacé au matin du J2",
-          text:"Le jeudi 10, Akrotiri ouvre à 08h30. La nouvelle organisation fait Akrotiri à l’ouverture puis Imerovigli → Oia à pied.",
-          action:"Demande idéalement un taxi à 08h00 depuis Fira et une reprise vers 10h10 pour Imerovigli.",
+          text:"Le jeudi 10, Akrotiri est placé le matin puis la journée continue vers Imerovigli et Oia. La version retenue se fait en bus via Fira.",
+          action:"Bus Fira → Akrotiri à 09h00, retour visé 11h20, puis correspondance à Fira pour Imerovigli.",
           sourceLabel:"Horaires officiels Akrotiri",
           sourceUrl:"https://cyclades.culture.gov.gr/location/archaiologikos-choros-akrotiriou-thiras/"
         },
@@ -297,6 +297,26 @@ window.CYCLADES_ENRICHMENT = {
       phone: "tel:+302286024305",
       site: "https://hotel-santorini.gr/",
       siteLabel: "Site officiel"
+    },
+    jtrBusStop: {
+      name: "Arrêt KTEL – Aéroport de Santorin", lat: 36.3992, lng: 25.4793, type: "transport",
+      blurb: "À gauche en sortant du bâtiment Arrivées, entre les bâtiments Arrivées et Départs. Bus direction Fira."
+    },
+    firaBusTerminal: {
+      name: "Fira Central Bus Station (KTEL)", lat: 36.4163, lng: 25.4341, type: "transport",
+      blurb: "Terminal central KTEL de Fira, près de 25th March Square. Toutes les correspondances importantes repartent d’ici."
+    },
+    akrotiriBusStop: {
+      name: "Arrêt KTEL – Akrotiri Archaeological Site", lat: 36.3507, lng: 25.4040, type: "transport",
+      blurb: "Arrêt au niveau de la plage / juste sous l’entrée du site archéologique. Pour le retour, demander le bus direction Fira."
+    },
+    imerovigliBusStop: {
+      name: "Arrêt KTEL – Imerovigli", lat: 36.4319, lng: 25.4270, type: "transport",
+      blurb: "Arrêt sur la route principale à l’est du village. Confirmer « Imerovigli » au conducteur avant de monter à Fira."
+    },
+    oiaBusTerminal: {
+      name: "Arrêt KTEL – Oia", lat: 36.4624, lng: 25.3778, type: "transport",
+      blurb: "Terminus / zone de départ KTEL d’Oia. Pour le soir, prendre le bus direction Fira."
     },
     fira: {
       name: "Fira", lat: 36.4167, lng: 25.4333, type: "town",
@@ -505,30 +525,107 @@ window.CYCLADES_ENRICHMENT = {
     j1: {
       points: [
         { id:"A", place:"strasbourgStation" }, { id:"B", place:"gareEst" },
-        { id:"C", place:"orly" }, { id:"D", place:"santoriniAirport" }, { id:"E", place:"fira" }
+        { id:"C", place:"orly" }, { id:"D", place:"santoriniAirport" }, { id:"E", place:"jtrBusStop" },
+        { id:"F", place:"firaBusTerminal" }, { id:"G", place:"fira" }
       ],
       legs: [
         { from:"A", to:"B", title:"Strasbourg → Paris", transportIndexes:[0], resources:["sncf"] },
         { from:"B", to:"C", title:"Gare de l’Est → Orly", transportIndexes:[1] },
         { from:"C", to:"D", title:"Orly → Santorin", transportIndexes:[2], resources:["transavia"] },
-        { from:"D", to:"E", title:"Aéroport → Fira", transportIndexes:[3,4], resources:["santoriniBus"] }
+        {
+          from:"E", to:"F", title:"Aéroport JTR → Fira", transportIndexes:[3,4], resources:["santoriniBus"],
+          guide:{
+            label:"BUS CE SOIR — PAS À CHERCHER",
+            board:"En sortant des Arrivées : tourne à GAUCHE. L’arrêt KTEL est dehors, entre le bâtiment Arrivées et le bâtiment Départs.",
+            line:"KTEL Santorini — liaison AIRPORT → FIRA",
+            direction:"FIRA / ΦΗΡΑ. C’est le terminus : ne descends pas avant.",
+            timing:"Vise 19h10. Départ suivant publié : 20h10.",
+            fare:"1,60 € / pers. selon l’horaire 2026 publié. Billet acheté dans le bus, en espèces.",
+            alight:"Fira Central Bus Station (terminus), ~10–15 min.",
+            action:"À la sortie du terminal, ne suis pas les taxis : cherche le bus KTEL sur ta gauche.",
+            mapUrl:"https://maps.apple.com/?q=Santorini+Airport+Bus+Stop"
+          }
+        },
+        {
+          from:"F", to:"G", title:"Terminal KTEL → Hôtel Santorini",
+          guide:{
+            label:"À L’ARRIVÉE À FIRA",
+            board:"Tu descends au terminal central KTEL de Fira, près du centre-ville.",
+            direction:"Ensuite, poursuis à pied vers l’Hôtel Santorini.",
+            action:"Garde ce terminal en tête : demain matin, c’est exactement ici que part le bus pour Akrotiri.",
+            mapUrl:"https://maps.apple.com/?q=Fira+Bus+Station+Santorini"
+          }
+        }
       ],
-      featured:["fira"]
+      featured:["firaBusTerminal","fira"]
     },
     j2: {
       points: [
-        { id:"A", place:"fira" }, { id:"B", place:"akrotiri" }, { id:"C", place:"imerovigli" },
-        { id:"D", place:"oia" }, { id:"E", place:"ammoudi" }
+        { id:"A", place:"firaBusTerminal" }, { id:"B", place:"akrotiriBusStop" }, { id:"C", place:"akrotiri" },
+        { id:"D", place:"firaBusTerminal" }, { id:"E", place:"imerovigliBusStop" }, { id:"F", place:"imerovigli" },
+        { id:"G", place:"oia" }, { id:"H", place:"oiaBusTerminal" }
       ],
       legs: [
-        { from:"A", to:"B", title:"Fira → Akrotiri", transportIndexes:[0] },
-        { from:"B", to:"C", title:"Akrotiri → Imerovigli", transportIndexes:[1] },
-        { from:"C", to:"D", title:"Sentier de la caldeira", transportIndexes:[2] },
-        { from:"D", to:"E", title:"Oia → Ammoudi", options:[{label:"À pied",detail:"~300 marches"},{label:"Taxi",detail:"option confortable"}] },
-        { from:"E", to:"D", title:"Retour Ammoudi → Oia", transportIndexes:[3] },
-        { from:"D", to:"A", title:"Oia → Fira", transportIndexes:[4], resources:["santoriniBus"] }
+        {
+          from:"A", to:"B", title:"Fira → Akrotiri", transportIndexes:[0], resources:["santoriniBus"],
+          guide:{
+            label:"BUS 1 — FIRA → AKROTIRI",
+            board:"Fira Central Bus Station (KTEL), le même terminal où tu arrives ce soir.",
+            line:"KTEL Santorini — ligne FIRA → AKROTIRI",
+            direction:"AKROTIRI / ΑΚΡΩΤΗΡΙ. Dis au receveur : « Archaeological site ».",
+            timing:"Départ visé 09h00 · trajet ~25 min · arrivée ~09h25.",
+            fare:"2,00 € / pers. publié. Paiement dans le bus, espèces.",
+            alight:"Arrêt du site archéologique, au niveau de la plage juste sous l’entrée du site.",
+            action:"Sois au terminal vers 08h45 et demande directement au personnel quel quai/bus est Akrotiri : les véhicules sont identifiés par destination, pas par numéro de ligne.",
+            mapUrl:"https://maps.apple.com/?q=Fira+Bus+Station+Santorini"
+          }
+        },
+        { from:"B", to:"C", title:"Arrêt → entrée d’Akrotiri", options:[{label:"À pied",detail:"quelques minutes, entrée juste au-dessus de l’arrêt"}] },
+        {
+          from:"B", to:"D", title:"Akrotiri → Fira", transportIndexes:[1], resources:["santoriniBus"],
+          guide:{
+            label:"BUS 2 — AKROTIRI → FIRA",
+            board:"Reviens au même secteur d’arrêt KTEL sous le site archéologique, côté plage.",
+            line:"KTEL Santorini — AKROTIRI → FIRA",
+            direction:"FIRA / ΦΗΡΑ. Confirme « Fira? » au conducteur avant de monter.",
+            timing:"Après la visite, vise le départ publié de 11h20. Trajet ~25 min.",
+            fare:"2,00 € / pers. publié. Espèces dans le bus.",
+            alight:"Fira Central Bus Station — terminus.",
+            action:"Sors du site vers 11h00 pour ne pas courir. Si l’horaire affiché sur place diffère, suis l’affichage KTEL du jour.",
+            mapUrl:"https://maps.apple.com/?q=Akrotiri+Archaeological+Site+Bus+Stop"
+          }
+        },
+        {
+          from:"D", to:"E", title:"Fira → Imerovigli", resources:["santoriniBus"],
+          guide:{
+            label:"BUS 3 — CORRESPONDANCE VERS IMEROVIGLI",
+            board:"À Fira, reste dans le terminal KTEL. Ne pars pas vers le centre.",
+            line:"Demande le prochain bus qui dessert IMEROVIGLI. Le corridor Fira → Oia passe par Imerovigli dans l’horaire publié, mais en haute saison les dessertes peuvent être exploitées séparément.",
+            direction:"IMEROVIGLI / OIA. Dis clairement « Imerovigli » au personnel ET au conducteur avant de monter.",
+            timing:"Si le retour Akrotiri arrive vers 11h45, vise le départ autour de 12h00. Garde 10–20 min de souplesse pour la correspondance.",
+            fare:"Environ 1,80–2,20 € / pers. selon la desserte appliquée.",
+            alight:"Arrêt IMEROVIGLI sur la route principale, à l’est du village.",
+            action:"Ne monte pas simplement dans un bus marqué OIA sans demander : fais confirmer qu’il s’arrête bien à Imerovigli ce jour-là.",
+            mapUrl:"https://maps.apple.com/?q=Fira+Bus+Station+Santorini"
+          }
+        },
+        { from:"E", to:"F", title:"Arrêt → sentier de la caldeira", options:[{label:"À pied",detail:"quelques minutes vers l’ouest, direction caldeira / Skaros"}] },
+        { from:"F", to:"G", title:"Imerovigli → Oia à pied", options:[{label:"À pied",detail:"~7 km · 2h15–2h45"}] },
+        {
+          from:"G", to:"H", title:"Oia → arrêt KTEL", 
+          guide:{
+            label:"RETOUR DU SOIR",
+            board:"Après Strogili, rejoins le terminal / arrêt principal KTEL d’Oia.",
+            direction:"Cherche le bus OIA → FIRA / ΦΗΡΑ.",
+            timing:"Dernier départ actuellement publié : 21h40. Sois à l’arrêt vers 21h20–21h25.",
+            fare:"1,80 € / pers. publié, espèces.",
+            alight:"Fira Central Bus Station, terminus.",
+            action:"En arrivant à Oia dans l’après-midi, repère l’arrêt et vérifie immédiatement l’horaire affiché du dernier bus.",
+            mapUrl:"https://maps.apple.com/?q=Oia+Bus+Station+Santorini"
+          }
+        }
       ],
-      featured:["akrotiri","oia"]
+      featured:["akrotiri","imerovigli","oia"]
     },
     j3: {
       points: [
