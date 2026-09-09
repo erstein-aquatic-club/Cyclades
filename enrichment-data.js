@@ -124,36 +124,31 @@ window.CYCLADES_ENRICHMENT = {
       ],
       j2: [
         {
-          id:"j2-official-bus-plan",
+          id:"j2-local-board-times",
           level:"ok",
-          title:"Horaires KTEL officiels revérifiés",
-          text:"Fira → Akrotiri : 10h00 → 10h20. Fira → Imerovigli : 14h00 → 14h05. Oia → Fira : 21h20 visé, puis 21h50 et 22h20 en repli.",
-          sourceLabel:"KTEL Santorini — horaires été 2026",
-          sourceUrl:"https://www.ktel-santorini.gr/index.php/en/services/timetable-summer"
+          title:"Horaires confirmés sur les totems KTEL de Fira",
+          text:"Fira → Akrotiri : 10h00. Akrotiri → Fira : 12h20. Fira → Imerovigli : 14h00 puis 15h00. Oia → Fira : 21h20, 21h50, 22h20.",
+          action:"Priorité aux horaires photographiés au terminal ce soir."
         },
         {
-          id:"j2-pyrgos-connection",
+          id:"j2-pyrgos-not-guaranteed",
           level:"attention",
-          title:"Pyrgos : confirmer l’arrêt intermédiaire",
-          text:"Le tableau KTEL publie les départs/arrivées des terminus mais pas l’heure de passage précise à Pyrgos.",
-          action:"Dans le bus de 12h20 à Akrotiri, demander « Pyrgos central square? ». À Kantouni, demander immédiatement l’heure du prochain bus vers Fira.",
-          sourceLabel:"KTEL Santorini",
-          sourceUrl:"https://www.ktel-santorini.gr/index.php/en/services/timetable-summer"
+          title:"Akrotiri → Pyrgos n’est PAS considéré comme garanti",
+          text:"Sur le panneau de ligne Akrotiri au terminal de Fira, Pyrgos apparaît rayé. Le passage à Pyrgos ne doit donc pas être utilisé comme hypothèse de planning.",
+          action:"Dans le bus retour d’Akrotiri, demande « Does this bus stop at Pyrgos? ». Si ce n’est pas un oui clair, reste jusqu’à Fira."
+        },
+        {
+          id:"j2-kantouni-conditional",
+          level:"info",
+          title:"Kantouni devient une option opportuniste",
+          text:"Vous y allez uniquement si le conducteur confirme l’arrêt Pyrgos. Sinon, retour direct à Fira sans chercher une autre combinaison."
         },
         {
           id:"j2-imerovigli-pivot",
           level:"attention",
-          title:"Le bus de 14h00 vers Imerovigli est le pivot",
-          text:"La liaison directe Fira → Imerovigli part à 14h00 puis seulement à 15h00.",
-          action:"Si le déjeuner / bus de Pyrgos fait rater 14h00, prends un taxi vers Imerovigli plutôt que de perdre une heure de randonnée."
-        },
-        {
-          id:"j2-kantouni",
-          level:"ok",
-          title:"Kantouni est bien sur la place centrale de Pyrgos",
-          text:"Le restaurant recommandé par l’hôtel est directement sur Pyrgos Central Square.",
-          sourceLabel:"Kantouni — site officiel",
-          sourceUrl:"https://www.kantounirestaurant.com/location"
+          title:"Fira → Imerovigli : objectif 14h00",
+          text:"Le totem affiche 14h00 puis 15h00.",
+          action:"Si le détour Pyrgos vous fait rater 14h00, taxi vers Imerovigli conseillé plutôt que perdre une heure."
         }
       ],
       j3: [
@@ -588,20 +583,21 @@ window.CYCLADES_ENRICHMENT = {
     j2: {
       plan: {
         title:"Plan retenu demain",
-        note:"Horaires KTEL revérifiés sur le tableau été 2026. Les heures de passage à Pyrgos ne sont pas publiées au minute près : confirme-les au chauffeur et chez Kantouni.",
+        note:"Plan principal robuste : Fira → Akrotiri, puis retour vers Fira. Pyrgos/Kantouni devient une option uniquement si le conducteur confirme clairement que le bus Akrotiri → Fira s’arrête bien à Pyrgos.",
         items:[
-          {time:"08:00",title:"Petit-déjeuner",detail:"Petit-déjeuner à l’hôtel. Pas besoin de courir : le bus utile pour Akrotiri est à 10h00."},
+          {time:"08:00",title:"Petit-déjeuner",detail:"Petit-déjeuner à l’hôtel. Le bus utile pour Akrotiri est à 10h00."},
           {time:"09:40",title:"Terminal KTEL de Fira",detail:"Arriver ~20 min avant. Demander « Akrotiri – archaeological site »."},
-          {time:"10:00",title:"Bus Fira → Akrotiri",detail:"KTEL, arrivée publiée 10h20. Tarif 2,20 € / pers., paiement en espèces dans le bus.",tone:"transport"},
+          {time:"10:00",title:"Bus Fira → Akrotiri",detail:"KTEL, arrivée 10h20. Tarif affiché : 2,20 € / pers., paiement en espèces dans le bus.",tone:"transport"},
           {time:"10:25",title:"Akrotiri",detail:"Visite jusqu’à ~12h05 : environ 1h35–1h40 sur place.",tone:"visit"},
-          {time:"12:20",title:"Bus Akrotiri → Pyrgos",detail:"Monter dans le bus retour vers Fira et demander au conducteur « Pyrgos central square? ». Descendre à Pyrgos si ce service y marque l’arrêt.",tone:"transport"},
-          {time:"~12:40",title:"Kantouni – Pyrgos Kallistis",detail:"Déjeuner sur la place centrale, recommandé par l’hôtel. Vise ~50–60 min pour garder la suite fluide.",tone:"food"},
-          {time:"~13:35",title:"Pyrgos → Fira",detail:"Reprendre le prochain bus direction Fira depuis la place. Demander l’heure de passage dès l’arrivée à Pyrgos.",tone:"transport"},
-          {time:"14:00",title:"Fira → Imerovigli",detail:"Liaison KTEL directe Fira → Imerovigli / Firostefani, arrivée publiée 14h05. Si tu rates 14h00, ne perds pas une heure : prends un taxi Pyrgos/Fira → Imerovigli pour préserver la randonnée.",tone:"important"},
+          {time:"12:20",title:"Bus Akrotiri → Fira",detail:"C’est le plan sûr. Avant de monter, demande : « Does this bus stop at Pyrgos? »",tone:"transport"},
+          {time:"12:20",title:"OPTION si Pyrgos est confirmé",detail:"Si le conducteur confirme clairement un arrêt à Pyrgos, descends à Pyrgos et va déjeuner chez Kantouni. Sinon, reste dans le bus jusqu’au terminus Fira.",tone:"important"},
+          {time:"~12:40",title:"Kantouni – seulement si Pyrgos confirmé",detail:"Restaurant sur la place centrale, recommandé par l’hôtel. En arrivant, demande immédiatement l’heure du prochain bus vers Fira.",tone:"food"},
+          {time:"~12:45",title:"Plan B : retour direct à Fira",detail:"Si Pyrgos n’est pas confirmé, tu restes simplement dans le bus jusqu’à Fira. Aucun temps perdu à chercher un arrêt incertain.",tone:"transport"},
+          {time:"14:00",title:"Fira → Imerovigli",detail:"Liaison directe Fira → Imerovigli / Firostefani, arrivée 14h05. Si Pyrgos vous fait rater 14h00, le suivant est à 15h00 : taxi vers Imerovigli conseillé pour préserver la randonnée.",tone:"important"},
           {time:"~14:15",title:"Imerovigli → Oia à pied",detail:"Rejoindre la caldeira puis randonnée ~7 km, environ 2h15–2h45. Pas d’Ammoudi demain.",tone:"walk"},
           {time:"~16:45",title:"Oia",detail:"Balade tranquille et repérage du terminal KTEL avant le dîner."},
           {time:"18:45",title:"Strogili",detail:"Dîner réservé. Coucher de soleil depuis Oia.",tone:"booking"},
-          {time:"21:20",title:"Bus Oia → Fira",detail:"Retour visé. Le tableau officiel affiche aussi 21h50 puis 22h20 comme replis.",tone:"transport"}
+          {time:"21:20",title:"Bus Oia → Fira",detail:"Retour visé. Replis affichés sur place : 21h50 puis 22h20.",tone:"transport"}
         ]
       },
       points: [
@@ -617,7 +613,7 @@ window.CYCLADES_ENRICHMENT = {
             board:"Fira Central Bus Station (KTEL).",
             line:"KTEL Santorini — FIRA → AKROTIRI",
             direction:"AKROTIRI / ΑΚΡΩΤΗΡΙ. Dis « archaeological site » au receveur.",
-            timing:"Départ officiel 10h00 · arrivée 10h20.",
+            timing:"Départ affiché 10h00 · arrivée 10h20.",
             fare:"2,20 € / pers. · espèces dans le bus.",
             alight:"Arrêt du site archéologique, juste sous l’entrée.",
             action:"Arrive vers 09h40 et fais confirmer le bus au personnel du terminal.",
@@ -626,28 +622,31 @@ window.CYCLADES_ENRICHMENT = {
         },
         { from:"B", to:"C", title:"Arrêt → Akrotiri", options:[{label:"À pied",detail:"quelques minutes jusqu’à l’entrée"}] },
         {
-          from:"B", to:"D", title:"Akrotiri → Pyrgos", resources:["santoriniBus"],
+          from:"B", to:"F", via:["D"], title:"Akrotiri → Fira (Pyrgos seulement si confirmé)", resources:["santoriniBus"],
           guide:{
-            label:"BUS 2 — AKROTIRI → PYRGOS",
+            label:"BUS 2 — RETOUR AKROTIRI",
             board:"Même secteur d’arrêt KTEL sous le site archéologique.",
-            line:"Bus retour AKROTIRI → FIRA.",
-            direction:"Demande AVANT de monter : « Pyrgos central square? ».",
-            timing:"Départ officiel depuis Akrotiri : 12h20.",
-            fare:"Prévoir espèces à bord.",
-            alight:"Pyrgos Kallistis, près de la place centrale.",
-            action:"Les heures intermédiaires ne sont pas publiées au minute près. Si le conducteur dit que ce service ne dépose pas à Pyrgos, reste jusqu’à Fira et adapte la suite.",
+            line:"Bus AKROTIRI → FIRA.",
+            direction:"FIRA / ΦΗΡΑ.",
+            timing:"Départ affiché depuis Akrotiri : 12h20.",
+            fare:"2,20 € / pers. affiché · espèces dans le bus.",
+            alight:"PLAN SÛR : Fira Central Bus Station. OPTION : Pyrgos uniquement si le conducteur confirme explicitement l’arrêt.",
+            action:"Demande avant de monter : « Does this bus stop at Pyrgos? ». Oui clair = Pyrgos/Kantouni. Non ou doute = reste jusqu’à Fira.",
             mapUrl:"https://maps.apple.com/?q=Akrotiri+Archaeological+Site+Santorini"
           }
         },
-        { from:"D", to:"E", title:"Arrêt Pyrgos → Kantouni", options:[{label:"À pied",detail:"restaurant sur la place centrale"}] },
         {
-          from:"D", to:"F", title:"Pyrgos → Fira", resources:["santoriniBus"],
+          from:"D", to:"E", title:"OPTION : Pyrgos → Kantouni",
+          options:[{label:"À pied",detail:"restaurant sur la place centrale · uniquement si l’arrêt Pyrgos a été confirmé"}]
+        },
+        {
+          from:"D", to:"F", title:"OPTION : Pyrgos → Fira", resources:["santoriniBus"],
           guide:{
-            label:"BUS 3 — PYRGOS → FIRA",
-            board:"Arrêt de la place / route principale de Pyrgos.",
+            label:"APRÈS KANTOUNI",
+            board:"Arrêt de Pyrgos sur la place / route principale.",
             direction:"FIRA / ΦΗΡΑ.",
-            timing:"Demande l’heure exacte de passage dès ton arrivée à Pyrgos ; vise un départ vers 13h35–13h45.",
-            fare:"2,20 € / pers. pour Pyrgos ↔ Fira selon le tarif officiel.",
+            timing:"Demande l’heure du prochain bus vers Fira dès ton arrivée à Pyrgos.",
+            fare:"Prévoir espèces à bord.",
             alight:"Fira Central Bus Station, terminus.",
             action:"Chez Kantouni, demande avant de commander : « What time is the next bus to Fira from the square? ».",
             mapUrl:"https://maps.apple.com/?q=Pyrgos+Kallistis+Santorini"
@@ -656,14 +655,14 @@ window.CYCLADES_ENRICHMENT = {
         {
           from:"F", to:"G", title:"Fira → Imerovigli", resources:["santoriniBus"],
           guide:{
-            label:"BUS 4 — FIRA → IMEROVIGLI",
+            label:"BUS 3 — FIRA → IMEROVIGLI",
             board:"Fira Central Bus Station.",
-            line:"Liaison directe IMEROVIGLI – FIROSTEFANI.",
+            line:"FIROSTEFANI / IMEROVIGLI.",
             direction:"IMEROVIGLI / ΗΜΕΡΟΒΙΓΛΙ.",
-            timing:"Départ officiel 14h00 · arrivée 14h05. Départ suivant : 15h00.",
-            fare:"Prévoir espèces à bord.",
+            timing:"Départs affichés : 14h00 puis 15h00.",
+            fare:"2,20 € / pers. affiché · espèces dans le bus.",
             alight:"Imerovigli, puis quelques minutes à pied vers la caldeira.",
-            action:"Le 14h00 est le pivot de la journée. Si le retour de Pyrgos le fait rater, prends un taxi vers Imerovigli plutôt que d’attendre 15h00.",
+            action:"14h00 reste l’objectif. Si Pyrgos fait rater ce bus, prends un taxi vers Imerovigli plutôt que d’attendre 15h00.",
             mapUrl:"https://maps.apple.com/?q=Fira+Bus+Station+Santorini"
           }
         },
@@ -675,8 +674,8 @@ window.CYCLADES_ENRICHMENT = {
             label:"RETOUR DU SOIR",
             board:"Terminal / arrêt principal KTEL d’Oia.",
             direction:"OIA → FIRA / ΦΗΡΑ.",
-            timing:"Vise 21h20. Replis officiels : 21h50 puis 22h20.",
-            fare:"2,20 € / pers. selon le tarif officiel Oia · espèces à bord.",
+            timing:"Vise 21h20. Replis affichés : 21h50 puis 22h20.",
+            fare:"2,20 € / pers. affiché · espèces dans le bus.",
             alight:"Fira Central Bus Station, terminus.",
             action:"Repère l’arrêt en arrivant à Oia et vérifie le tableau affiché sur place.",
             mapUrl:"https://maps.apple.com/?q=Oia+Bus+Station+Santorini"

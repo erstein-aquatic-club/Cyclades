@@ -1,5 +1,5 @@
 // Cyclades React V4 — offline-first static application shell
-const CACHE = 'cyclades-j2-kantouni-v6-2-20260909';
+const CACHE = 'cyclades-j2-pyrgos-fallback-v6-3-20260909';
 const LOCAL_ASSETS = [
   './',
   './index.html',
