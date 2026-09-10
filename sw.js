@@ -1,11 +1,12 @@
 // Cyclades React V4 — offline-first static application shell
-const CACHE = 'cyclades-j2-pyrgos-fallback-v6-3-20260909';
+const CACHE = 'cyclades-mykonos-transfers-v6-4-20260910';
 const LOCAL_ASSETS = [
   './',
   './index.html',
   './styles.css',
   './app.js',
   './enrichment-data.js',
+  './live-updates.js',
   './trip-data.html',
   './manifest.webmanifest',
   './icon-180.png',
