@@ -1,5 +1,5 @@
 // Cyclades React V4 — offline-first static application shell
-const CACHE = 'cyclades-mykonos-transfers-v6-4-20260910';
+const CACHE = 'cyclades-volcano-access-v6-5-20260911';
 const LOCAL_ASSETS = [
   './',
   './index.html',
