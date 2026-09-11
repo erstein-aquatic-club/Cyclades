@@ -1,10 +1,14 @@
 // Cyclades React V4 — offline-first static application shell
-const CACHE = 'cyclades-volcano-access-v6-5-20260911';
+const CACHE = 'cyclades-supabase-expenses-v6-6-20260911b';
 const LOCAL_ASSETS = [
   './',
   './index.html',
   './styles.css',
+  './backend.css',
   './app.js',
+  './supabase-config.js',
+  './supabase.js',
+  './backend-ui.js',
   './enrichment-data.js',
   './live-updates.js',
   './trip-data.html',
@@ -17,67 +21,19 @@ const VENDOR_ASSETS = [
   'https://unpkg.com/react@18.3.1/umd/react.production.min.js',
   'https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js',
   'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css',
-  'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js'
+  'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js',
+  'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.57.4/dist/umd/supabase.min.js'
 ];
 const ASSETS = LOCAL_ASSETS.concat(VENDOR_ASSETS);
 
 self.addEventListener('install', event => {
-  event.waitUntil(
-    caches.open(CACHE)
-      .then(cache => Promise.all(ASSETS.map(asset =>
-        fetch(asset, { cache: 'reload' }).then(response => {
-          if (!response.ok) throw new Error('Precaching failed: ' + asset);
-          return cache.put(asset, response);
-        })
-      )))
-      .then(() => self.skipWaiting())
-  );
+  event.waitUntil(caches.open(CACHE).then(cache => Promise.all(ASSETS.map(asset => fetch(asset,{cache:'reload'}).then(response => {if(!response.ok)throw new Error('Precaching failed: '+asset);return cache.put(asset,response);})))) .then(() => self.skipWaiting()));
 });
-
-self.addEventListener('activate', event => {
-  event.waitUntil(
-    caches.keys()
-      .then(keys => Promise.all(keys.filter(key => key !== CACHE).map(key => caches.delete(key))))
-      .then(() => self.clients.claim())
-  );
-});
-
+self.addEventListener('activate', event => {event.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(key => key !== CACHE).map(key => caches.delete(key)))).then(() => self.clients.claim()));});
 self.addEventListener('fetch', event => {
-  if (event.request.method !== 'GET') return;
-
-  const url = new URL(event.request.url);
-  const isNavigation = event.request.mode === 'navigate';
-
-  // Let map tiles and remote preview images use the browser/provider cache rules.
-  if (url.hostname === 'tile.openstreetmap.org' || url.hostname === 'commons.wikimedia.org' || url.hostname === 'upload.wikimedia.org') return;
-  const isTripData = url.origin === self.location.origin && url.pathname.endsWith('/trip-data.html');
-
-  if (isNavigation || isTripData) {
-    event.respondWith(
-      fetch(new Request(event.request, { cache: 'no-store' }))
-        .then(response => {
-          if (response.ok) {
-            const copy = response.clone();
-            caches.open(CACHE).then(cache => cache.put(event.request, copy));
-          }
-          return response;
-        })
-        .catch(() =>
-          caches.match(event.request)
-            .then(hit => hit || (isNavigation ? caches.match('./index.html') : caches.match('./trip-data.html')))
-        )
-    );
-    return;
-  }
-
-  event.respondWith(
-    caches.match(event.request)
-      .then(hit => hit || fetch(event.request).then(response => {
-        if (response.ok || response.type === 'opaque') {
-          const copy = response.clone();
-          caches.open(CACHE).then(cache => cache.put(event.request, copy));
-        }
-        return response;
-      }))
-  );
+  if(event.request.method !== 'GET')return;const url=new URL(event.request.url),isNavigation=event.request.mode==='navigate';
+  if(url.hostname==='tile.openstreetmap.org'||url.hostname==='commons.wikimedia.org'||url.hostname==='upload.wikimedia.org')return;
+  const isTripData=url.origin===self.location.origin&&url.pathname.endsWith('/trip-data.html');
+  if(isNavigation||isTripData){event.respondWith(fetch(new Request(event.request,{cache:'no-store'})).then(response=>{if(response.ok){const copy=response.clone();caches.open(CACHE).then(cache=>cache.put(event.request,copy));}return response;}).catch(()=>caches.match(event.request).then(hit=>hit||(isNavigation?caches.match('./index.html'):caches.match('./trip-data.html')))));return;}
+  event.respondWith(caches.match(event.request).then(hit=>hit||fetch(event.request).then(response=>{if(response.ok||response.type==='opaque'){const copy=response.clone();caches.open(CACHE).then(cache=>cache.put(event.request,copy));}return response;})));
 });
