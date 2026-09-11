@@ -1,10 +1,13 @@
 // Cyclades React V4 — offline-first static application shell
-const CACHE = 'cyclades-volcano-access-v6-5-20260911';
+const CACHE = 'cyclades-supabase-expenses-v6-6-20260911';
 const LOCAL_ASSETS = [
   './',
   './index.html',
   './styles.css',
   './app.js',
+  './supabase-config.js',
+  './supabase.js',
+  './backend-ui.js',
   './enrichment-data.js',
   './live-updates.js',
   './trip-data.html',
@@ -17,7 +20,8 @@ const VENDOR_ASSETS = [
   'https://unpkg.com/react@18.3.1/umd/react.production.min.js',
   'https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js',
   'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css',
-  'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js'
+  'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js',
+  'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.57.4/dist/umd/supabase.min.js'
 ];
 const ASSETS = LOCAL_ASSETS.concat(VENDOR_ASSETS);
 
