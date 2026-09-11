@@ -29,7 +29,8 @@ alter table public.profiles enable row level security;
 alter table public.expenses enable row level security;
 revoke all on public.profiles from anon;
 revoke all on public.expenses from anon;
-grant select, update on public.profiles to authenticated;
+grant select on public.profiles to authenticated;
+grant update (display_name) on public.profiles to authenticated;
 grant select, insert, update, delete on public.expenses to authenticated;
 
 create policy "profiles_select_own" on public.profiles for select to authenticated using ((select auth.uid()) = id);
