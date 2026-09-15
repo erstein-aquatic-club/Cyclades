@@ -1,5 +1,5 @@
 // Cyclades React V4 — offline-first static application shell
-const CACHE = 'cyclades-expenses-redesign-v7-20260911';
+const CACHE = 'cyclades-expenses-redesign-v8-20260914';
 const LOCAL_ASSETS = [
   './','./index.html','./styles.css','./backend.css','./app.js','./supabase-config.js','./supabase.js','./backend-ui.js','./enrichment-data.js','./live-updates.js','./trip-data.html','./manifest.webmanifest','./icon-180.png','./icon-192.png','./icon-512.png'
 ];
