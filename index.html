@@ -20,11 +20,7 @@
 </head>
 <body>
   <div id="root" class="backend-hidden">
-    <div class="boot">
-      <div class="boot-mark"></div>
-      <strong>Cyclades</strong>
-      <span>Préparation du voyage…</span>
-    </div>
+    <div class="boot"><div class="boot-mark"></div><strong>Cyclades</strong><span>Préparation du voyage…</span></div>
   </div>
   <div id="backend-root"></div>
 
@@ -38,6 +34,7 @@
   <script defer src="./enrichment-data.js"></script>
   <script defer src="./live-updates.js"></script>
   <script defer src="./app.js"></script>
+  <script defer src="./mobile-navigation-v2.js"></script>
   <script>
     if ('serviceWorker' in navigator && location.protocol === 'https:') {
       var cycladesSwRefreshing = false;
