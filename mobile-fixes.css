@@ -1,0 +1,28 @@
+/* Mobile interaction fixes — day changes are click-only, no horizontal day rail scrolling */
+html,body{max-width:100%;overflow-x:hidden}
+.section-title{min-width:0}
+.section-title>div{min-width:0}
+.section-title h2{overflow-wrap:anywhere}
+.text-btn{flex:0 0 auto;max-width:42%;white-space:normal;text-align:right;line-height:1.2;overflow-wrap:anywhere}
+
+/* Show all 10 day buttons without a horizontally scrollable carousel. */
+.day-rail{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px;overflow:visible;padding:0 10px;scroll-snap-type:none}
+.day-pill{min-width:0;width:100%;min-height:53px;padding:6px 5px;text-align:center;scroll-snap-align:none;overflow:hidden}
+.day-pill .day-num,.day-pill .day-island,.day-pill small{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.day-pill .day-island{font-size:.68rem}
+.day-pill small{font-size:.54rem}
+.day-rail-wrap{overflow:visible}
+
+/* Prevent nested horizontal strips/cards from expanding the viewport. */
+.page,.section-block,.day-focus,.upcoming-block,.upcoming-list,.upcoming-card{min-width:0;max-width:100%}
+.upcoming-card>*{min-width:0}
+.upcoming-main>strong,.upcoming-meta span{overflow-wrap:anywhere}
+
+@media (max-width:390px){
+  .day-rail{gap:5px;padding:0 8px}
+  .day-pill{padding:5px 3px}
+  .day-pill .day-island{font-size:.63rem}
+  .day-pill small{font-size:.5rem}
+  .section-title{gap:7px}
+  .text-btn{max-width:38%;font-size:.68rem}
+}
